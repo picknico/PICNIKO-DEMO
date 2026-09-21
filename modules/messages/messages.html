@@ -23,11 +23,6 @@
 body.messages-page{padding-bottom:0!important}
 body.messages-page .messages-app{padding-bottom:0}
 body.messages-page .msg-layout{padding-bottom:18px}
-body.messages-page .bottom{transition:height .22s ease,transform .22s ease}
-body.messages-page .bottom.messages-nav-minimized{height:18px;overflow:visible}
-body.messages-page .bottom.messages-nav-minimized .bottomin{display:none}
-body.messages-page .messages-nav-toggle{position:absolute;top:-18px;left:50%;transform:translateX(-50%);width:74px;height:24px;border:1px solid var(--line);border-bottom:0;border-radius:14px 14px 0 0;background:#fff;color:var(--purple);font-size:13px;font-weight:900;cursor:pointer;box-shadow:0 -3px 12px rgba(23,27,43,.08)}
-body.messages-page .bottom:not(.messages-nav-minimized) .messages-nav-toggle{top:-12px;height:22px;border-bottom:1px solid var(--line);border-radius:12px}
 body.messages-page .chat-compose{position:relative;z-index:2;padding-bottom:12px}
 @media(max-width:760px){body.messages-page .msg-layout{padding-bottom:4px}body.messages-page .chat{min-height:calc(100vh - 120px)}body.messages-page .chat-compose{padding-bottom:14px}}
 
@@ -109,7 +104,7 @@ body.messages-page .v28-tool{border:1px solid rgba(70,121,180,.55);background:li
 <script type="module">
 import {mountBottom} from "../../js/app.js";
 import {getDb, currentUser} from "../../js/db.js";
-mountBottom('home');
+mountBottom('messages');
 let conversations=[
 {id:1,name:'Aarav Patil',initial:'A',preview:'Photo पाठवली',time:'2m',unread:2,online:true,favorite:true,type:'friend',messages:[{mine:false,text:'आज संध्याकाळी भेटूया?',time:'19:12'},{mine:true,text:'हो, नक्की! 😊',time:'19:13',seen:true},{mine:false,file:true,fileType:'image',text:'Photo पाठवली',time:'19:14'},{mine:true,text:'छान फोटो आहे!',time:'19:15',seen:true}]},
 {id:2,name:'Sahyadri Creators',initial:'S',preview:'New video shared',time:'1h',unread:0,online:false,favorite:false,type:'group',messages:[{mine:false,text:'आजच्या campaign बद्दल अपडेट आहे.',time:'18:02'},{mine:true,text:'मी details पाहतो.',time:'18:05',seen:true}]},
