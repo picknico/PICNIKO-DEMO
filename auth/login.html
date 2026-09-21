@@ -1,75 +1,56 @@
 <!doctype html>
 <html lang="mr">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0b0d">
 <title>PICNIKO — Login</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../js/config.js"></script>
 <style>
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;font-family:Arial,sans-serif;background:linear-gradient(135deg,#f5f2ff,#eefbff);color:#171b2b;padding:20px}.card{width:min(100%,440px);background:#fff;border:1px solid #e5e7f0;border-radius:26px;padding:28px;box-shadow:0 16px 50px #25204b12}.brand{font-size:32px;font-weight:900;color:#6337e8;letter-spacing:-1px}.sub{color:#73798b;margin:7px 0 22px}.tabs{display:flex;gap:8px;margin-bottom:16px}.tab{flex:1;border:0;border-radius:12px;padding:11px;background:#f0f1f7;cursor:pointer;font-weight:800}.tab.active{background:#6337e8;color:#fff}.mode{display:flex;gap:8px;margin-bottom:18px}.mode button{flex:1;border:1px solid #dfe2ed;background:#fff;border-radius:11px;padding:10px;cursor:pointer;font-weight:700}.mode button.active{border-color:#6337e8;background:#f1edff;color:#6337e8}label{display:block;font-size:13px;font-weight:700;margin:12px 0 6px}input{width:100%;padding:13px 14px;border:1px solid #dfe2ed;border-radius:13px;font:inherit}button.primary{width:100%;margin-top:18px;padding:14px;border:0;border-radius:14px;background:#6337e8;color:#fff;font-size:15px;font-weight:800;cursor:pointer}.hint{font-size:12px;color:#777e91;margin-top:14px;line-height:1.5}.status{margin-top:14px;font-size:13px;padding:10px;border-radius:12px;background:#f3f4f8;display:none;line-height:1.5}.status.error{display:block;color:#a3213b;background:#fff0f3}.status.ok{display:block;color:#176b43;background:#edfff5}.demo{display:block;text-align:center;margin-top:16px;color:#6337e8;text-decoration:none;font-size:13px}.hidden{display:none!important}.back{border:0;background:transparent;color:#6337e8;cursor:pointer;font-size:12px;margin-top:10px}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#08090c;color:#fff}body{min-height:100svh;display:grid;place-items:center;padding:18px;overflow-x:hidden}.bg{position:fixed;inset:0;overflow:hidden;pointer-events:none}.orb{position:absolute;border-radius:50%;filter:blur(60px);opacity:.38}.o1{width:280px;height:280px;background:#6337e8;left:-90px;top:-80px}.o2{width:250px;height:250px;background:#12aebe;right:-90px;bottom:-60px}.card{position:relative;width:min(100%,430px);padding:26px 20px 20px;border:1px solid rgba(255,255,255,.09);border-radius:28px;background:rgba(17,18,23,.91);backdrop-filter:blur(24px);box-shadow:0 25px 80px rgba(0,0,0,.48)}.brand{text-align:center;font-size:34px;font-weight:950;letter-spacing:-1.8px;background:linear-gradient(90deg,#fff,#a78bfa,#5eead4);-webkit-background-clip:text;background-clip:text;color:transparent}.tag{text-align:center;color:#a9abb5;font-size:11px;margin:4px 0 22px}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:5px;background:#202126;border-radius:14px;padding:4px;margin-bottom:16px}.tab{border:0;border-radius:11px;padding:11px;background:transparent;color:#9ea0aa;font-weight:850}.tab.active{background:#fff;color:#111}.methods{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:13px}.method{border:1px solid #34353d;background:#18191e;color:#fff;border-radius:13px;padding:11px 8px;font-weight:800;font-size:12px}.method.active{border-color:#8b5cf6;background:#241b43;color:#d9ccff}.fb{width:100%;border:0;border-radius:14px;padding:13px;background:#1877f2;color:#fff;font-weight:900;margin-bottom:12px}.divider{display:flex;align-items:center;gap:8px;color:#6f727d;font-size:10px;margin:12px 0}.divider:before,.divider:after{content:"";height:1px;background:#303139;flex:1}label{display:block;font-size:12px;font-weight:800;color:#d7d8dd;margin:12px 0 6px}input{width:100%;height:48px;border:1px solid #34353d;border-radius:14px;background:#111217;color:#fff;padding:0 14px;outline:0}input:focus{border-color:#8b5cf6;box-shadow:0 0 0 3px rgba(139,92,246,.13)}.primary{width:100%;margin-top:15px;height:50px;border:0;border-radius:15px;background:linear-gradient(135deg,#6337e8,#8b5cf6);color:#fff;font-weight:950;font-size:15px}.hint{font-size:11px;color:#858892;line-height:1.5;margin-top:12px;text-align:center}.status{display:none;margin-top:12px;border-radius:12px;padding:10px;font-size:12px;line-height:1.45}.status.show{display:block}.status.error{background:#35161e;color:#ffb4c0}.status.ok{background:#102c21;color:#9cf0c6}.demo{display:block;text-align:center;margin-top:13px;color:#a78bfa;font-size:11px}.hidden{display:none!important}.small-note{font-size:10px;color:#70737e;margin-top:8px;line-height:1.4}
+@media(max-width:390px){body{padding:10px}.card{padding:22px 15px;border-radius:24px}.brand{font-size:30px}}
 </style>
+<link href="../css/mobile-universal.css" rel="stylesheet"/>
+<link rel="stylesheet" href="../../css/v44-mobile-fit.css">
+<link rel="stylesheet" href="../css/v45-mobile-stable.css">
 </head>
 <body>
+<div class="bg"><i class="orb o1"></i><i class="orb o2"></i></div>
 <main class="card">
   <div class="brand">PICNIKO</div>
-  <div class="sub">सह्याद्रीच्या कुशीत, अनुभवांच्या शोधात.</div>
+  <div class="tag">Explore • Connect • Earn</div>
   <div class="tabs"><button class="tab active" id="loginTab">Login</button><button class="tab" id="signupTab">Create account</button></div>
-  <div class="mode" id="loginMode"><button id="emailMode" class="active" type="button">Email</button><button id="phoneMode" type="button">Mobile OTP</button></div>
-  <form id="authForm">
-    <div id="emailFields">
-      <label for="email">Email</label><input id="email" type="email" placeholder="you@example.com" autocomplete="email">
-      <label for="password">Password</label><input id="password" type="password" minlength="6" placeholder="किमान 6 अक्षरे" autocomplete="current-password">
-    </div>
-    <div id="phoneFields" class="hidden">
-      <label for="phone">Mobile Number</label><input id="phone" type="tel" placeholder="+91 9876543210" autocomplete="tel">
-      <div id="otpFields" class="hidden"><label for="otp">OTP</label><input id="otp" inputmode="numeric" autocomplete="one-time-code" placeholder="6 अंकी OTP"></div>
-    </div>
+  <div class="methods" id="methods"><button class="method active" id="emailMethod">Email / User ID</button><button class="method" id="facebookMethod">Facebook</button></div>
+  <button class="fb hidden" id="facebookBtn" type="button">Continue with Facebook</button>
+  <div id="emailArea">
+    <label for="identifier">Email / PICNIKO User ID</label>
+    <input id="identifier" autocomplete="username" placeholder="Email ID किंवा User ID">
+    <div class="small-note">Existing Supabase Auth connectivity सुरक्षित ठेवली आहे. Username-only login साठी स्वतंत्र verified mapping backend मध्ये आवश्यक आहे.</div>
+    <label for="password">Password</label>
+    <input id="password" type="password" minlength="6" autocomplete="current-password" placeholder="Password">
     <button class="primary" id="submitBtn" type="submit">Login</button>
-  </form>
-  <button id="backBtn" class="back hidden" type="button">← Mobile number बदला</button>
-  <div class="hint" id="hint">Messages मधील real database testing साठी Supabase Auth मध्ये login आवश्यक आहे.</div>
+  </div>
+  <div id="signupArea" class="hidden">
+    <label for="signupEmail">Email</label><input id="signupEmail" type="email" autocomplete="email" placeholder="you@example.com">
+    <label for="signupPassword">Password</label><input id="signupPassword" type="password" minlength="6" autocomplete="new-password" placeholder="किमान 6 अक्षरे">
+    <button class="primary" id="signupBtn" type="button">Create account</button>
+  </div>
+  <div class="divider"><span>Secure Supabase Auth</span></div>
+  <div class="hint">Login झाल्यावर तुमची category निवडा आणि PICNIKO Home उघडा.</div>
   <div id="status" class="status" aria-live="polite"></div>
-  <a class="demo" href="../modules/home/home.html">Demo Home उघडा</a>
+  <a class="demo" href="../onboarding/category.html">Demo पुढे उघडा</a>
 </main>
 <script type="module">
 import {getDb} from '../js/db.js';
-const $=id=>document.getElementById(id);
-let mode='login',loginMethod='email',otpSent=false;
-function status(text,kind=''){const el=$('status');el.textContent=text;el.className='status '+kind;}
-function setMode(next){mode=next;$('loginTab').classList.toggle('active',mode==='login');$('signupTab').classList.toggle('active',mode==='signup');$('loginMode').classList.toggle('hidden',mode!=='login');$('emailFields').classList.toggle('hidden',mode==='login'&&loginMethod==='phone');$('phoneFields').classList.toggle('hidden',!(mode==='login'&&loginMethod==='phone'));$('otpFields').classList.add('hidden');$('backBtn').classList.add('hidden');otpSent=false;$('submitBtn').textContent=mode==='signup'?'Create account':'Login';$('hint').textContent=mode==='signup'?'Email/Password ने account तयार करा. Mobile OTP साठी Supabase Phone provider आवश्यक आहे.':'Messages मधील real database testing साठी Supabase Auth मध्ये login आवश्यक आहे.';status('');}
-function setLoginMethod(next){loginMethod=next;$('emailMode').classList.toggle('active',next==='email');$('phoneMode').classList.toggle('active',next==='phone');$('emailFields').classList.toggle('hidden',next!=='email');$('phoneFields').classList.toggle('hidden',next!=='phone');$('otpFields').classList.add('hidden');$('backBtn').classList.add('hidden');otpSent=false;$('submitBtn').textContent='Send OTP';if(next==='email')$('submitBtn').textContent='Login';status('');}
-$('loginTab').addEventListener('click',()=>setMode('login'));$('signupTab').addEventListener('click',()=>setMode('signup'));$('emailMode').addEventListener('click',()=>setLoginMethod('email'));$('phoneMode').addEventListener('click',()=>setLoginMethod('phone'));$('backBtn').addEventListener('click',()=>{otpSent=false;$('otpFields').classList.add('hidden');$('backBtn').classList.add('hidden');$('submitBtn').textContent='Send OTP';status('');});
-const db=getDb();
-if(!db)status('Supabase config सापडली नाही. js/config.js तपासा.','error');
-else{const {data}=await db.auth.getSession();if(data?.session)location.href='../modules/home/home.html';}
-$('authForm').addEventListener('submit',async e=>{e.preventDefault();if(!db){status('Supabase configured नाही.','error');return;}status('कृपया थांबा…');let result;
-try{
- if(mode==='signup'){
-   const email=$('email').value.trim(),password=$('password').value;
-   if(!email||!password){status('Email आणि Password भरा.','error');return;}
-   result=await db.auth.signUp({email,password});
-   if(result.error){status(result.error.message,'error');return;}
-   status('Account तयार झाला. Email confirmation आवश्यक असल्यास email तपासा.','ok');return;
- }
- if(loginMethod==='email'){
-   const email=$('email').value.trim(),password=$('password').value;
-   result=await db.auth.signInWithPassword({email,password});
-   if(result.error){status(result.error.message,'error');return;}
-   status('Login successful…','ok');location.href='../modules/home/home.html';return;
- }
- const phone=$('phone').value.trim();
- if(!/^\+\d{8,15}$/.test(phone)){status('Mobile number country code सहित लिहा. उदाहरण: +919876543210','error');return;}
- if(!otpSent){
-   result=await db.auth.signInWithOtp({phone});
-   if(result.error){status(result.error.message,'error');return;}
-   otpSent=true;$('otpFields').classList.remove('hidden');$('backBtn').classList.remove('hidden');$('submitBtn').textContent='Verify OTP';status('OTP पाठवण्याची विनंती झाली. Mobile वर आलेला OTP टाका.','ok');return;
- }
- const token=$('otp').value.trim();
- if(!/^\d{4,8}$/.test(token)){status('योग्य OTP टाका.','error');return;}
- result=await db.auth.verifyOtp({phone,token,type:'sms'});
- if(result.error){status(result.error.message,'error');return;}
- status('Mobile OTP Login successful…','ok');location.href='../modules/home/home.html';
-}catch(err){status(err?.message||'Authentication error आला.','error');}
-});
+const $=id=>document.getElementById(id);let mode='login',method='email';const db=getDb();
+function status(t,k=''){const e=$('status');e.textContent=t;e.className='status '+(t?'show ':'')+k}
+function refresh(){ $('loginTab').classList.toggle('active',mode==='login');$('signupTab').classList.toggle('active',mode==='signup');$('methods').classList.toggle('hidden',mode==='signup');$('emailArea').classList.toggle('hidden',mode!=='login'||method!=='email');$('facebookBtn').classList.toggle('hidden',mode!=='login'||method!=='facebook');$('signupArea').classList.toggle('hidden',mode!=='signup');}
+$('loginTab').onclick=()=>{mode='login';refresh();status('')};$('signupTab').onclick=()=>{mode='signup';refresh();status('')};$('emailMethod').onclick=()=>{method='email';$('emailMethod').classList.add('active');$('facebookMethod').classList.remove('active');refresh();status('')};$('facebookMethod').onclick=()=>{method='facebook';$('facebookMethod').classList.add('active');$('emailMethod').classList.remove('active');refresh();status('')};
+async function go(){location.href='../onboarding/category.html'}
+if(db){const {data}=await db.auth.getSession();if(data?.session)go()}
+$('submitBtn').onclick=async()=>{if(!db)return status('Supabase config उपलब्ध नाही.','error');const identifier=$('identifier').value.trim(),password=$('password').value;if(!identifier||!password)return status('Email/User ID आणि Password भरा.','error');if(!identifier.includes('@'))return status('सध्याच्या सुरक्षित Auth contract मध्ये password login साठी Email आवश्यक आहे. User-ID-only login जोडण्यासाठी backend mapping न बदलता करता येणार नाही.','error');try{const r=await db.auth.signInWithPassword({email:identifier,password});if(r.error)throw r.error;status('Login successful…','ok');setTimeout(go,250)}catch(e){status(e.message||'Login failed.','error')}};
+$('signupBtn').onclick=async()=>{if(!db)return status('Supabase config उपलब्ध नाही.','error');const email=$('signupEmail').value.trim(),password=$('signupPassword').value;if(!email||!password)return status('Email आणि Password भरा.','error');try{const r=await db.auth.signUp({email,password});if(r.error)throw r.error;status('Account तयार झाला. Email confirmation आवश्यक असल्यास email तपासा.','ok')}catch(e){status(e.message||'Signup failed.','error')}};
+$('facebookBtn').onclick=async()=>{if(!db)return status('Supabase config उपलब्ध नाही.','error');try{const r=await db.auth.signInWithOAuth({provider:'facebook',options:{redirectTo:new URL('../onboarding/category.html',location.href).href}});if(r.error)throw r.error}catch(e){status(e.message||'Facebook login सुरू झाला नाही. Supabase मध्ये Facebook provider enable आहे का ते तपासा.','error')}};
+refresh();
 </script>
 </body></html>

@@ -1,0 +1,132 @@
+CREATE OR REPLACE FUNCTION public.scan_bottle(p_qr_token text, p_latitude numeric DEFAULT NULL::numeric, p_longitude numeric DEFAULT NULL::numeric)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+
+declare
+    v_user_id uuid;
+    v_bottle_id uuid;
+    v_batch_id uuid;
+    v_reward integer;
+    v_scan_id uuid;
+    v_bottle_status text;
+    v_referrer_id uuid;
+    v_referral_id uuid;
+    v_referral_reward integer := 5;
+
+begin
+    v_user_id := auth.uid();
+
+    if v_user_id is null then
+        return jsonb_build_object('success', false, 'message', 'Please login first');
+    end if;
+
+    select id, batch_id, status
+    into v_bottle_id, v_batch_id, v_bottle_status
+    from public.bottles
+    where qr_token = p_qr_token
+    limit 1;
+
+    if v_bottle_id is null then
+        return jsonb_build_object('success', false, 'message', 'Invalid PICNIKO / Mulshi Fresh QR');
+    end if;
+
+    if v_bottle_status in ('blocked','retired') then
+        insert into public.bottle_scans (bottle_id, user_id, scan_status, latitude, longitude)
+        values (v_bottle_id, v_user_id, 'blocked', p_latitude, p_longitude);
+
+        return jsonb_build_object('success', false, 'message', 'This bottle QR is blocked');
+    end if;
+
+    if exists (
+        select 1 from public.bottle_scans
+        where bottle_id = v_bottle_id
+        and scan_status = 'verified'
+    ) then
+        insert into public.bottle_scans (bottle_id, user_id, scan_status, latitude, longitude)
+        values (v_bottle_id, v_user_id, 'duplicate', p_latitude, p_longitude);
+
+        return jsonb_build_object(
+            'success', false,
+            'duplicate', true,
+            'message', 'This bottle has already received a reward'
+        );
+    end if;
+
+    select reward_points
+    into v_reward
+    from public.reward_rules
+    where rule_name = 'verified_bottle_scan'
+    and is_active = true
+    limit 1;
+
+    v_reward := coalesce(v_reward, 10);
+
+    insert into public.bottle_scans
+    (bottle_id, user_id, scan_status, reward_points, latitude, longitude)
+    values
+    (v_bottle_id, v_user_id, 'verified', v_reward, p_latitude, p_longitude)
+    returning id into v_scan_id;
+
+    update public.bottles
+    set first_scanned_at = coalesce(first_scanned_at, now()),
+        first_scanned_by = coalesce(first_scanned_by, v_user_id),
+        status = case when status = 'manufactured' then 'sold' else status end
+    where id = v_bottle_id;
+
+    update public.profiles
+    set reward_points = coalesce(reward_points, 0) + v_reward,
+        updated_at = now()
+    where id = v_user_id;
+
+    insert into public.reward_transactions
+    (user_id, transaction_type, points, bottle_scan_id, description)
+    values
+    (v_user_id, 'bottle_scan', v_reward, v_scan_id, 'Verified Mulshi Fresh bottle QR scan');
+
+    select id, referrer_id
+    into v_referral_id, v_referrer_id
+    from public.referrals
+    where referred_user_id = v_user_id
+      and status = 'pending'
+    order by created_at asc
+    limit 1
+    for update;
+
+    if v_referral_id is not null and v_referrer_id is not null then
+        update public.profiles
+        set reward_points = coalesce(reward_points, 0) + v_referral_reward,
+            updated_at = now()
+        where id = v_referrer_id;
+
+        insert into public.reward_transactions
+        (user_id, transaction_type, points, bottle_scan_id, description)
+        values
+        (v_referrer_id, 'referral', v_referral_reward, v_scan_id,
+         'Referral reward for first verified bottle scan');
+
+        update public.referrals
+        set status = 'rewarded',
+            rewarded_at = now(),
+            referrer_reward = v_referral_reward,
+            referred_reward = 0
+        where id = v_referral_id
+          and status = 'pending';
+    end if;
+
+    return jsonb_build_object(
+        'success', true,
+        'message', 'Bottle verified successfully',
+        'reward_points', v_reward,
+        'referral_reward',
+            case when v_referral_id is not null then v_referral_reward else 0 end,
+        'referral_rewarded', (v_referral_id is not null),
+        'scan_id', v_scan_id,
+        'bottle_id', v_bottle_id,
+        'batch_id', v_batch_id
+    );
+end;
+
+$function$

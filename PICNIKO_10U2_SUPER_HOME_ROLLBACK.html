@@ -136,7 +136,7 @@ html,body{width:100%;min-width:0;overflow-x:hidden}
   </div>
 
   <div class="p3quickMedia">
-    <button type="button" aria-label="Open Reels and Shorts" onclick="showPage('reels',this)">🎬<span>Reels / Shorts</span></button>
+    <button type="button" aria-label="Open Reels and Shorts" onclick="openReelsModule()">🎬<span>Reels / Shorts</span></button>
     <button type="button" aria-label="Open Activity" onclick="showPage('activity',this)">⚡<span>Activity</span></button>
     <button type="button" aria-label="Open Messages" onclick="showPage('messages',this)">💬<span>Messages</span></button>
     <button type="button" aria-label="Open News" onclick="showPage('news',this)">📰<span>News</span></button>
@@ -407,7 +407,7 @@ html,body{width:100%;min-width:0;overflow-x:hidden}
     <div class="shHead"><h2>⚡ Quick Access</h2><small>YOUR SPACE</small></div>
     <div class="shNav">
       <button onclick="toast('💬 Messages')">💬<br>Messages</button>
-      <button onclick="showPage('reels')">🎬<br>Reels</button>
+      <button onclick="openReelsModule()">🎬<br>Reels</button>
       <button onclick="showPage('friends')">👥<br>Circle</button>
       <button onclick="showPage('rewards')">🎁<br>Rewards</button>
     </div>
@@ -496,8 +496,8 @@ html,body{width:100%;min-width:0;overflow-x:hidden}
     </div>
   </section>
 
-  <section class="xSection"><div class="xSectionHead"><div><small>PICNIKO COMMUNITY</small><h2>लोक काय शोधत आहेत?</h2></div><button onclick="showPage('reels')">Reels →</button></div>
-    <div class="xSocialCard"><div class="xAvatar">P</div><div class="xSocialText"><b>@picniko_community <span>✓</span></b><h3>🌿 Weekend nature moments</h3><p>Mulshi • Pawna • Lonavala</p><div class="xSocialBtns"><button onclick="showPage('reels')">▶ WATCH</button><button onclick="showPage('friends')">＋ CONNECT</button></div></div></div>
+  <section class="xSection"><div class="xSectionHead"><div><small>PICNIKO COMMUNITY</small><h2>लोक काय शोधत आहेत?</h2></div><button onclick="openReelsModule()">Reels →</button></div>
+    <div class="xSocialCard"><div class="xAvatar">P</div><div class="xSocialText"><b>@picniko_community <span>✓</span></b><h3>🌿 Weekend nature moments</h3><p>Mulshi • Pawna • Lonavala</p><div class="xSocialBtns"><button onclick="openReelsModule()">▶ WATCH</button><button onclick="showPage('friends')">＋ CONNECT</button></div></div></div>
   </section>
 
   <section class="xSection"><div class="xSectionHead"><div><small>ONE PRODUCT → MANY BENEFITS</small><h2>PICNIKO Loop</h2></div></div>
@@ -742,13 +742,14 @@ html,body{width:100%;min-width:0;overflow-x:hidden}
 </div>
 </div>
 
-<!-- REELS -->
-<div class="page" id="reels">
+<!-- REELS ENTRY ONLY — canonical Reels module lives at modules/reels/reels.html -->
+<div class="page" id="reelsEntry">
 <div class="section"><div class="head"><h2>🎬 PICNIKO Reels</h2><span>COMMUNITY</span></div>
-<div class="reel r1"><div class="reeltxt"><h3>🌄 Nature Morning</h3><p>@priya • Lonavala</p></div><div class="reelact"><div>❤️<small>1.2K</small></div><div>💬<small>86</small></div><div>↗️<small>Share</small></div></div></div>
-<div class="reel r2"><div class="reeltxt"><h3>🏕️ Responsible Travel</h3><p>@rohan • Pawna</p></div><div class="reelact"><div>❤️<small>2.4K</small></div><div>💬<small>142</small></div><div>↗️<small>Share</small></div></div></div>
-</div>
-</div>
+<div class="card" style="background:linear-gradient(135deg,#101522,#24113f);color:#fff;border-radius:20px;padding:18px">
+<h3 style="font-size:17px">Watch PICNIKO Reels</h3>
+<p style="font-size:10px;opacity:.8;line-height:1.5;margin-top:6px">Full-screen video feed, autoplay, Like, Comment, Save, Share, Plan and creator features एकाच Reels module मध्ये.</p>
+<button class="btn" style="margin-top:12px;background:#fff;color:#111;width:100%" onclick="openReelsModule()">🎬 OPEN REELS</button>
+</div></div></div>
 
 <!-- FRIENDS -->
 <div class="page" id="friends">
@@ -1159,5 +1160,10 @@ function searchWithAI(){const q=document.getElementById('placeQuery').value.trim
 })();
 </script>
 
+<script>
+function openReelsModule(){
+  window.location.href='modules/reels/reels.html';
+}
+</script>
 </body>
 </html>

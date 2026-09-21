@@ -72,6 +72,10 @@ body.messages-page .v28-tool{border:1px solid rgba(70,121,180,.55);background:li
 .v28-plan-form{display:grid;gap:10px}.v28-plan-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.v28-plan-form input,.v28-plan-form select{width:100%;border:1px solid #dfe5ef;border-radius:13px;padding:11px 12px;font:inherit;background:#fbfcff}.v28-plan-form label{font-size:10px;font-weight:900;color:#6e7890;text-transform:uppercase;letter-spacing:.7px}.v28-plan-field{display:grid;gap:5px}.v28-plan-submit{border:0;border-radius:15px;padding:13px 15px;background:linear-gradient(135deg,#6337e8,#12aebe);color:#fff;font-weight:900;cursor:pointer}.v28-feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.v28-feature{border:1px solid #e2e7f0;background:linear-gradient(135deg,#fff,#f6f9ff);border-radius:17px;padding:14px;text-align:left;cursor:pointer}.v28-feature b{display:block;margin-bottom:4px}.v28-feature span{font-size:11px;color:#778198;line-height:1.35}.v28-trip-card{margin-top:7px;padding:14px;border-radius:18px;background:linear-gradient(135deg,#102d56,#153f70);border:1px solid #2f628f;color:#eef7ff;box-shadow:0 10px 28px rgba(5,18,39,.22)}.v28-trip-card .trip-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.v28-trip-card .trip-badge{font-size:9px;font-weight:900;letter-spacing:.8px;padding:5px 8px;border-radius:999px;background:rgba(25,211,139,.14);color:#7cf0c1}.v28-trip-card h4{margin:4px 0 5px;font-size:17px}.v28-trip-card p{margin:0;color:#b9d0e8;font-size:11px;line-height:1.4}.v28-trip-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.v28-trip-meta span{font-size:10px;padding:6px 8px;border-radius:999px;background:rgba(255,255,255,.08);color:#dcecff}.v28-mini-actions{display:flex;gap:7px;margin-top:10px}.v28-mini-actions button{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;border-radius:10px;padding:7px 9px;font-size:10px;cursor:pointer}.v28-ai-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;background:linear-gradient(135deg,rgba(99,55,232,.18),rgba(18,174,190,.18));color:#dffbff;border:1px solid rgba(75,180,220,.25);font-size:10px;font-weight:900}
 @media(max-width:520px){.v28-plan-grid,.v28-feature-grid{grid-template-columns:1fr}.v28-hero-note{font-size:10px}}
 </style>
+<link rel="stylesheet" href="../../css/mobile-app.css">
+<link href="../../css/mobile-universal.css" rel="stylesheet"/>
+<link rel="stylesheet" href="../../css/v44-mobile-fit.css">
+<link rel="stylesheet" href="../../css/v45-mobile-stable.css">
 </head>
 <body class="messages-page">
 <div class="messages-app">
@@ -453,23 +457,6 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-open-map]'
 </script>
 <script type="module">
   import { mountBottom } from "../../js/app.js";
-  mountBottom("home");
-  const nav = document.querySelector("body.messages-page .bottom");
-  if (nav && !nav.querySelector(".messages-nav-toggle")) {
-    nav.classList.add("messages-nav-minimized");
-    const toggle = document.createElement("button");
-    toggle.className = "messages-nav-toggle";
-    toggle.type = "button";
-    toggle.setAttribute("aria-expanded", "false");
-    toggle.setAttribute("aria-label", "Show or hide bottom navigation");
-    toggle.textContent = "⌃ Menu";
-    toggle.addEventListener("click", () => {
-      const minimized = nav.classList.toggle("messages-nav-minimized");
-      toggle.setAttribute("aria-expanded", String(!minimized));
-      toggle.textContent = minimized ? "⌃ Menu" : "⌄ Hide";
-    });
-    nav.appendChild(toggle);
-  }
-
+  mountBottom("messages");
 </script>
 </body></html>

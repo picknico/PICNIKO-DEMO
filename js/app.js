@@ -1,19 +1,14 @@
 const tabs = [
   {key:'home', icon:'⌂', name:'Home', path:'../home/home.html'},
-  {key:'nearby', icon:'⌖', name:'Nearby', path:'../nearby/nearby.html'},
-  {key:'marketplace', icon:'▣', name:'Shop', path:'../marketplace/marketplace.html'},
+  {key:'discover', icon:'⌕', name:'Discover', path:'../discover/discover.html'},
+  {key:'reels', icon:'▷', name:'Reels', path:'../reels/reels.html'},
+  {key:'messages', icon:'◌', name:'Messages', path:'../messages/messages.html'},
   {key:'profile', icon:'●', name:'Profile', path:'../profile/profile.html'}
 ];
 
 export function bottom(active){
-  const left = tabs.slice(0,2);
-  const right = tabs.slice(2);
   const tabHtml = t => `<a class="tab ${active===t.key?'active':''}" href="${t.path}"><span class="ico">${t.icon}</span><span>${t.name}</span></a>`;
-  return `<nav class="bottom" aria-label="Primary navigation"><div class="bottomin">
-    ${left.map(tabHtml).join('')}
-    <button class="create" data-create aria-label="Create on PICNIKO">+</button>
-    ${right.map(tabHtml).join('')}
-  </div></nav>`;
+  return `<nav class="bottom" aria-label="Primary navigation"><div class="bottomin">${tabs.map(tabHtml).join('')}</div></nav>`;
 }
 
 export function mountBottom(active){
