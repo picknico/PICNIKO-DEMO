@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no"><meta name="theme-color" content="#07111f"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><link rel="manifest" href="./manifest.json">
+<title>PICNIKO Smart Campaign Studio</title>
+<link rel="stylesheet" href="./studio.css">
+</head>
+<body>
+<div class="shell">
+<header class="top"><div><div class="brand">PICNIKO <span>CAMPAIGN STUDIO</span></div><div class="sub">Create once. Reach everywhere. Understand everything.</div></div><button id="createBtn" class="primary">＋ Create campaign</button></header>
+<div class="layout">
+<aside class="side"><div class="side-title">Campaigns</div><button class="nav active" data-view="overview">◈ Overview</button><button class="nav" data-view="campaigns">◎ Campaigns</button><button class="nav" data-view="audience">◉ Audience</button><button class="nav" data-view="creative">◇ Creative Studio</button><button class="nav" data-view="analytics">▣ Analytics</button><button class="nav" data-view="connections">⚙ Connections</button><div class="wallet"><small>Campaign wallet</small><strong>₹25,000</strong><span>Available balance</span><button>+ Add funds</button></div></aside>
+<main>
+<section class="hero"><div><div class="eyebrow">SMART CAMPAIGN STUDIO</div><h1>One campaign.<br><em>Three powerful channels.</em></h1><p>Build a campaign for PICNIKO and prepare platform-ready versions for Google and Meta from one clean workspace.</p></div><div class="hero-card"><span>PIKO AI</span><strong>Campaign assistant</strong><p>“Promote my resort to travellers within 25 km.”</p><button id="aiBtn">Build with PIKO →</button></div></section>
+<section class="metrics"><div><span>Active campaigns</span><b>03</b><small>+1 this week</small></div><div><span>Spend this month</span><b>₹6,840</b><small>Across connected channels</small></div><div><span>Leads</span><b>248</b><small>From your campaigns</small></div><div><span>Reach</span><b>1.28L</b><small>Illustrative dashboard data</small></div></section>
+<section class="grid" id="overviewGrid">
+<div class="panel wide"><div class="panel-head"><div><h2>Campaign channels</h2><p>Connect and manage your publishing destinations.</p></div><span class="live">READY</span></div><div class="channels"><article><div class="ico pic">P</div><div><b>PICNIKO Ads</b><small>Local discovery • social • offers</small></div><span class="on">Connected</span></article><article><div class="ico goo">G</div><div><b>Google Ads</b><small>Search • YouTube • Display</small></div><button class="connect">Connect</button></article><article><div class="ico met">M</div><div><b>Meta Ads</b><small>Facebook • Instagram</small></div><button class="connect">Connect</button></article></div></div>
+<div class="panel"><div class="panel-head"><div><h2>Quick campaign</h2><p>Start with a goal.</p></div></div><div class="goals"><button>💬 Messages</button><button>👤 Leads</button><button>🌐 Website</button><button>▶ Video views</button><button>🛍 Sales</button><button>📍 Local visits</button></div></div>
+<div class="panel wide"><div class="panel-head"><div><h2>Audience builder</h2><p>Use explicit audience settings. Private messages and exact private location are never targeting inputs.</p></div><button class="ghost">Save audience</button></div><div class="audience"><label>Location<input value="Pune • 25 km" id="loc"></label><label>Age<select><option>18–45</option><option>21–55</option><option>25–65+</option></select></label><label>Interests<input value="Travel, Food, Photography"></label><label>Daily budget<input value="₹500"></label></div><div class="chips"><span>✦ Travel intent</span><span>✦ Nearby discovery</span><span>✦ Local offers</span><span>＋ Add interest</span></div></div>
+<div class="panel"><div class="panel-head"><div><h2>Creative preview</h2><p>One brief, channel-ready variants.</p></div><button class="ghost">Edit</button></div><div class="creative"><div class="creative-img">YOUR<br>CREATIVE</div><div><b>Weekend escape near Pune</b><p>Discover a refreshing getaway with your friends.</p><button>Book now</button></div></div></div>
+<div class="panel wide"><div class="panel-head"><div><h2>Unified performance</h2><p>Keep platform reporting together. Values below are demo UI data.</p></div><button class="ghost">View analytics</button></div><div class="table"><div class="tr head"><span>Channel</span><span>Spend</span><span>Reach</span><span>Clicks</span><span>Leads</span></div><div class="tr"><span>◉ PICNIKO</span><span>₹2,140</span><span>42.5K</span><span>1,240</span><span>86</span></div><div class="tr"><span>G Google</span><span>₹2,700</span><span>51.2K</span><span>980</span><span>91</span></div><div class="tr"><span>f Meta</span><span>₹2,000</span><span>34.8K</span><span>1,110</span><span>71</span></div></div></div>
+</section>
+</main></div></div>
+<div class="mobile-nav" aria-label="Campaign Studio mobile navigation">
+  <button class="mnav active" data-view="overview"><span>⌂</span><small>Home</small></button>
+  <button class="mnav" data-view="campaigns"><span>▣</span><small>Campaigns</small></button>
+  <button class="mnav create" id="mobileCreate"><span>＋</span><small>Create</small></button>
+  <button class="mnav" data-view="audience"><span>◉</span><small>Audience</small></button>
+  <button class="mnav" data-view="connections"><span>⋯</span><small>More</small></button>
+</div>
+<div class="modal" id="modal"><div class="modal-box wizard-box"><button class="x" id="close">×</button><div id="wizard"></div></div></div><div class="toast" id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/config.js"></script>
+<script src="./studio.js"></script>
+</body></html>

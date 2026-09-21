@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>PICNIKO • Mulshi Fresh</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Inter,Arial,sans-serif}
+:root{--g:#00a878;--d:#063d37;--b:#287cff;--gold:#ffb51b;--bg:#f3faf7;--muted:#78908a}
+body{background:radial-gradient(circle at top,#d9f8ed,#f3faf7 45%);color:#173b36;padding-bottom:88px}
+.app{max-width:600px;margin:auto;min-height:100vh;background:#f8fcfb;box-shadow:0 0 60px #0001}
+.header{height:70px;position:sticky;top:0;z-index:500;background:#fffffff2;backdrop-filter:blur(18px);display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid #dcebe6}
+.logo{font-size:25px;font-weight:1000;color:var(--g)}.logo span{color:var(--d)}.logo small{display:block;font-size:6px;letter-spacing:1.8px;color:#81928e}
+.avatar{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#00a878,#71dfbd);color:#fff;font-weight:bold;font-size:11px}
+.page{display:none}.page.active{display:block}
+.hero{margin:15px;padding:25px 21px;border-radius:28px;min-height:285px;color:white;background:linear-gradient(135deg,#043d35ee,#00a878c9),url("https://images.unsplash.com/photo-1500534623283-312aade485b7?q=85&w=1200") center/cover;box-shadow:0 18px 40px #00795c35}
+.heroTag{font-size:8px;background:#ffffff18;border:1px solid #ffffff30;border-radius:20px;padding:7px 11px;display:inline-block}.hero h1{font-size:38px;line-height:.95;margin-top:17px}.hero p{font-size:10px;line-height:1.55;margin-top:12px;max-width:360px}
+.row{display:flex;gap:8px}.btn{border:0;border-radius:12px;padding:11px 14px;font-size:8px;font-weight:bold;cursor:pointer}.white{background:#fff;color:var(--g)}.green{background:var(--g);color:#fff}.dark{background:var(--d);color:#fff}.blue{background:var(--b);color:#fff}
+.section{padding:8px 15px}.head{display:flex;justify-content:space-between;align-items:center;margin:17px 2px 11px}.head h2{font-size:17px}.head span{font-size:7px;color:var(--g);font-weight:bold}
+.card{background:#fff;border-radius:21px;padding:15px;margin-bottom:10px;box-shadow:0 6px 17px #0000000b;border:1px solid #e3efeb}
+.product{display:flex;gap:16px;align-items:center}.bottle{width:70px;height:116px;border-radius:18px 18px 23px 23px;border:2px solid #b5e9dc;background:linear-gradient(90deg,#fff,#c8fff0,#fff);position:relative;box-shadow:inset 0 0 18px #00a87820,0 8px 20px #00a87820}.cap{position:absolute;top:-14px;left:19px;width:28px;height:14px;background:var(--d);border-radius:6px 6px 2px 2px}.blabel{position:absolute;top:38px;width:100%;padding:10px 1px;text-align:center;background:linear-gradient(135deg,#00a878,#063d37);color:#fff;font-size:8px;font-weight:bold}.info{flex:1}.info h3{font-size:15px}.info p{font-size:8px;color:var(--muted);line-height:1.5;margin-top:5px}
+.wallet{margin:15px;padding:19px;border-radius:25px;color:#fff;background:linear-gradient(135deg,#063d37,#009d75);box-shadow:0 15px 32px #006b5430}.wallettop{display:flex;justify-content:space-between}.label{font-size:7px;opacity:.7;letter-spacing:1px}.points{font-size:38px;font-weight:1000}.level{padding:8px 10px;background:#ffffff15;border-radius:12px;font-size:8px;height:max-content}.progress{height:7px;background:#ffffff22;border-radius:20px;overflow:hidden;margin-top:13px}.progress i{display:block;height:100%;background:#ffd64a;width:70%;transition:.4s}.wallet p{font-size:7px;margin-top:5px}.walletactions{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:13px}.walletactions button{padding:10px 3px;border-radius:10px;border:1px solid #ffffff25;background:#ffffff12;color:#fff;font-size:7px}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.metric{background:#f0faf7;border-radius:13px;padding:12px}.metric b{display:block;font-size:17px}.metric span{font-size:7px;color:var(--muted)}
+.delivery .line{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #edf3f1}.delivery .line:last-child{border:0}.di{width:38px;height:38px;border-radius:11px;background:#eaf8f3;display:grid;place-items:center}.delivery .info b{font-size:9px}.delivery .info span{display:block;font-size:7px;color:var(--muted);margin-top:3px}.ok{font-size:7px;color:#00895f;font-weight:bold}
+.map{height:610px;margin:12px;border-radius:27px;overflow:hidden;position:relative;background:linear-gradient(#0002,#0002),url("https://images.unsplash.com/photo-1524666041070-9c876415a7b4?q=90&w=1600") center/cover;box-shadow:0 10px 35px #0004}.mapsearch{position:absolute;top:12px;left:12px;right:60px;background:#fffffff2;padding:13px;border-radius:14px;font-size:9px;z-index:20}.route{position:absolute;width:390px;height:8px;left:10px;top:290px;background:#238cff;border-radius:20px;transform:rotate(-22deg);box-shadow:0 0 15px #238cff}.car{position:absolute;left:95px;top:355px;width:52px;height:52px;border-radius:50%;background:#167cff;border:4px solid #fff;display:grid;place-items:center;font-size:20px;z-index:12;animation:move 4s ease-in-out infinite alternate}@keyframes move{to{transform:translate(45px,-25px)}}.pin{position:absolute;right:75px;top:200px;width:50px;height:50px;border-radius:50% 50% 50% 0;background:#ff3545;transform:rotate(-45deg);display:grid;place-items:center;color:#fff;z-index:11}.pin span{transform:rotate(45deg)}
+.partnerpost{position:absolute;right:10px;top:66px;width:190px;padding:8px;border-radius:16px;background:#071c19f5;border:2px solid #2de0ad;color:#fff;z-index:50;box-shadow:0 10px 35px #000b}.partnerpost img{width:100%;height:72px;object-fit:cover;border-radius:9px}.live{font-size:7px;color:#a5ffe7;margin-bottom:5px}.dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#ff3345}.partnerpost h3{font-size:11px;margin-top:5px}.partnerpost p{font-size:7px;color:#a7bdb8;margin-top:3px}.offer{margin-top:6px;padding:6px;border-radius:7px;background:#fff0bc;color:#705100;font-size:7px;font-weight:bold}.postbtns{display:flex;gap:5px;margin-top:6px}.postbtns button{flex:1;padding:7px;border:0;border-radius:8px;font-size:7px;font-weight:bold}.navcard{position:absolute;left:11px;right:11px;bottom:11px;padding:15px;border-radius:19px;background:#fffffff2;z-index:40;box-shadow:0 10px 35px #0006}.navtop{display:flex;justify-content:space-between}.navtop h3{font-size:14px}.eta{color:var(--g);font-weight:bold;font-size:11px}.details{font-size:8px;color:var(--muted);margin-top:7px}.start{width:100%;margin-top:10px;padding:12px;border:0;border-radius:12px;background:var(--b);color:#fff;font-size:9px;font-weight:bold}
+.business{display:flex;gap:11px}.business img{width:78px;height:78px;object-fit:cover;border-radius:15px}.business h3{font-size:13px}.business p{font-size:8px;color:var(--muted);margin-top:4px}.tags{display:flex;gap:4px;margin-top:6px}.tag{background:#e8f8f3;color:var(--g);padding:4px 6px;border-radius:6px;font-size:6px}.business .offer{background:#fff2c8}.scanbox{margin:15px;padding:24px;border-radius:27px;text-align:center;color:#fff;background:linear-gradient(145deg,#063d37,#009d75)}.scanner{width:235px;height:235px;border:3px solid #42ffca;border-radius:21px;margin:25px auto;position:relative;box-shadow:0 0 30px #00ffb050}.scanline{position:absolute;left:10px;right:10px;height:3px;background:#ffe344;top:10px;animation:scan 2s linear infinite}@keyframes scan{from{top:10px}to{top:220px}}.scanicon{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:70px}.scanbox p{font-size:8px;opacity:.8}.qualitytop{display:flex;justify-content:space-between}.pass{padding:6px 9px;border-radius:9px;background:#e5faf2;color:#00895f;font-size:7px;font-weight:bold;height:max-content}.report{margin-top:10px;padding:10px;background:#f1f9f7;border-radius:12px;font-size:8px;line-height:1.6}
+.reel{height:430px;border-radius:23px;margin-bottom:14px;overflow:hidden;position:relative;background-size:cover;background-position:center}.r1{background-image:linear-gradient(transparent,#000c),url("https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=85&w=1000")}.r2{background-image:linear-gradient(transparent,#000c),url("https://images.unsplash.com/photo-1500534623283-312aade485b7?q=85&w=1000")}.reeltxt{position:absolute;bottom:20px;left:17px;color:#fff}.reeltxt h3{font-size:18px}.reeltxt p{font-size:8px;margin-top:4px}.reelact{position:absolute;right:13px;bottom:20px;color:#fff;text-align:center;display:flex;flex-direction:column;gap:15px}.reelact div{font-size:21px}.reelact small{display:block;font-size:7px}
+.podcast{margin:15px;padding:22px;border-radius:26px;background:linear-gradient(135deg,#5136c9,#8b63ff);color:#fff}.podcast h1{font-size:24px}.podcast p{font-size:9px;line-height:1.5;margin-top:6px}.topic{padding:15px;background:#fff;border-radius:17px}.topic b{font-size:23px}.topic span{display:block;font-size:8px;color:var(--muted);margin-top:4px}
+.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);max-width:600px;width:100%;height:80px;background:#fffffff2;backdrop-filter:blur(20px);border-top:1px solid #dceae6;display:flex;justify-content:space-around;align-items:center;z-index:700}.nav{text-align:center;color:#81918d;font-size:19px;cursor:pointer}.nav span{display:block;font-size:7px;margin-top:4px}.nav.active{color:var(--g)}
+.modal{display:none;position:fixed;inset:0;background:#000a;z-index:2000;align-items:flex-end}.modalbox{width:100%;max-width:600px;margin:auto;background:#fff;border-radius:28px 28px 0 0;padding:23px}.close{float:right;border:0;background:none;font-size:25px}.input{width:100%;padding:13px;margin-top:8px;border:1px solid #dce9e5;border-radius:12px}.full{width:100%;padding:13px;margin-top:9px;border:0;border-radius:12px;background:var(--g);color:#fff;font-weight:bold}.toast{position:fixed;left:50%;bottom:95px;transform:translateX(-50%) translateY(20px);background:#063d37;color:#fff;padding:12px 18px;border-radius:30px;font-size:9px;opacity:0;z-index:3000;transition:.3s;white-space:nowrap}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ===== PICNIKO HOME v10U-2 PREMIUM ===== */
+.homePremium{padding:0 0 92px;background:#f5fbf9}.homeTop{position:relative;overflow:hidden;padding:22px 18px 24px;border-radius:0 0 30px 30px;background:radial-gradient(circle at 88% 8%,#35d7b0 0,transparent 25%),linear-gradient(145deg,#032f2b,#006c5c 58%,#00a878);color:#fff;box-shadow:0 18px 45px #003c3328}.homeTop:after{content:'';position:absolute;width:190px;height:190px;border:1px solid #ffffff22;border-radius:50%;right:-70px;bottom:-85px}.hTopRow{display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2}.brandMark{font-size:22px;font-weight:950;letter-spacing:-1px}.brandMark span{color:#7dffe1}.brandSub{font-size:7px;letter-spacing:1.6px;opacity:.72;margin-top:2px}.hBell{width:38px;height:38px;border-radius:14px;border:1px solid #ffffff2b;background:#ffffff12;display:grid;place-items:center;font-size:17px}.hGreeting{position:relative;z-index:2;margin-top:24px}.hPill{display:inline-flex;align-items:center;gap:6px;background:#ffffff15;border:1px solid #ffffff25;border-radius:999px;padding:7px 10px;font-size:8px;font-weight:800}.hGreeting h1{font-size:31px;line-height:1.03;letter-spacing:-1.4px;margin:13px 0 7px}.hGreeting p{font-size:9px;line-height:1.55;max-width:310px;color:#d8f7ef}.hActions{display:grid;grid-template-columns:1.25fr 1fr;gap:8px;margin-top:16px;position:relative;z-index:2}.hAction{border:0;border-radius:15px;padding:12px 10px;font-weight:900;font-size:9px;display:flex;align-items:center;justify-content:center;gap:6px}.hAction.primary{background:#fff;color:#006c5c}.hAction.ghost{background:#ffffff13;color:#fff;border:1px solid #ffffff2d}.homeBody{padding:15px}.homeSection{margin-top:15px}.homeHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}.homeHead h2{font-size:14px;letter-spacing:-.2px}.homeHead span{font-size:7px;color:#009b79;font-weight:900}.walletCard{display:grid;grid-template-columns:1fr auto;gap:12px;padding:15px;border-radius:20px;background:linear-gradient(135deg,#fff,#e9faf5);border:1px solid #d8eee8;box-shadow:0 8px 25px #064f4310}.walletTitle{font-size:8px;color:#608078;font-weight:800}.walletPts{font-size:28px;font-weight:950;color:#063d37;line-height:1.05;margin:4px 0}.walletPts small{font-size:10px;color:#00a878}.walletBtns{display:flex;gap:6px;margin-top:9px}.miniBtn{border:0;border-radius:10px;padding:8px 10px;font-size:7px;font-weight:900;background:#063d37;color:#fff}.miniBtn.light{background:#dff5ee;color:#006c5c}.ring{width:58px;height:58px;border-radius:50%;background:conic-gradient(#00b789 0 72%,#dcefe9 72%);display:grid;place-items:center}.ring:after{content:'72%';width:42px;height:42px;border-radius:50%;background:#fff;display:grid;place-items:center;color:#063d37;font-size:9px;font-weight:950}.storyRow{display:flex;gap:9px;overflow:hidden}.story{min-width:64px;text-align:center}.storyCircle{width:58px;height:58px;margin:auto;border-radius:20px;padding:2px;background:linear-gradient(135deg,#00b789,#7df8d7);box-shadow:0 5px 16px #006c5c22}.storyCircle div{height:100%;border-radius:18px;background:#fff;display:grid;place-items:center;font-size:22px}.story span{display:block;font-size:7px;font-weight:800;color:#536c66;margin-top:5px;white-space:nowrap}.feedCard{background:#fff;border:1px solid #e5efec;border-radius:20px;overflow:hidden;box-shadow:0 8px 24px #063d370a}.feedVisual{height:125px;position:relative;display:flex;align-items:flex-end;padding:12px;background:linear-gradient(135deg,#214d3c,#9bd4a0)}.feedBadge{position:absolute;top:10px;left:10px;background:#ffffffd9;color:#06483f;border-radius:999px;padding:5px 8px;font-size:7px;font-weight:950}.feedTitle{color:#fff;font-size:17px;font-weight:950;line-height:1.05;max-width:220px;text-shadow:0 2px 8px #0006}.feedBody{padding:11px 12px}.feedUser{font-size:7px;color:#7a8e89;font-weight:800}.feedText{font-size:9px;color:#38524c;line-height:1.45;margin-top:5px}.feedActions{display:flex;justify-content:space-between;gap:5px;margin-top:9px}.feedActions button{border:0;background:#f2f8f6;border-radius:10px;padding:7px 8px;font-size:7px;font-weight:900;color:#42645c}.discovery{display:grid;grid-template-columns:1fr 1fr;gap:9px}.discover{padding:13px;border-radius:18px;color:#fff;min-height:112px;position:relative;overflow:hidden;background:linear-gradient(145deg,#075c4f,#00a878)}.discover.alt{background:linear-gradient(145deg,#183e54,#287f9b)}.discover b{font-size:24px;display:block;margin-bottom:7px}.discover h3{font-size:11px}.discover p{font-size:7px;line-height:1.4;opacity:.82;margin-top:4px}.discover button{position:absolute;bottom:10px;left:11px;border:1px solid #ffffff35;background:#ffffff15;color:#fff;border-radius:9px;padding:6px 9px;font-size:7px;font-weight:900}.quickGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.quick{background:#fff;border:1px solid #e5efec;border-radius:15px;padding:10px 4px;text-align:center}.quick b{font-size:19px;display:block}.quick span{font-size:6px;color:#70827e;font-weight:900;display:block;margin-top:3px}@media(min-width:700px){.homePremium{max-width:900px;margin:auto}.homeTop{border-radius:0 0 36px 36px;padding:30px 28px 34px}.homeBody{padding:22px 28px}.hGreeting h1{font-size:42px}.feedVisual{height:180px}}
+
+/* 10U-2 PUBLIC RETENTION HOME */
+.homeX{padding:0 0 110px;background:#f6fbf9;color:#123b35;min-height:100vh}.xHead{position:sticky;top:0;z-index:20;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;background:rgba(246,251,249,.88);backdrop-filter:blur(16px);border-bottom:1px solid #dceee8}.xLogo{font-size:22px;font-weight:1000;letter-spacing:-1px;color:#063d37}.xLogo span{color:#00a878}.xSub{font-size:6px;letter-spacing:1.2px;color:#78908a;font-weight:900;margin-top:2px}.xHeadBtns{display:flex;gap:7px}.xHeadBtns button{border:1px solid #d8e9e4;background:#fff;width:34px;height:34px;border-radius:12px;font-weight:900;color:#063d37}.xHero{margin:12px 12px 0;padding:24px 20px 18px;border-radius:28px;background:radial-gradient(circle at 88% 12%,#38e3b4 0,#00a878 25%,#063d37 72%);color:#fff;position:relative;overflow:hidden;box-shadow:0 20px 50px #063d3725}.xGlow{position:absolute;width:170px;height:170px;border-radius:50%;right:-70px;top:-70px;background:#fff2;filter:blur(2px)}.xTag{display:inline-block;padding:7px 10px;border-radius:999px;background:#ffffff18;border:1px solid #ffffff30;font-size:7px;font-weight:900;letter-spacing:.5px}.xHero h1{font-size:31px;line-height:1.03;letter-spacing:-1.5px;margin:18px 0 10px}.xHero h1 em{font-style:normal;color:#bfffe9}.xHero p{font-size:10px;line-height:1.6;color:#e5fff7;max-width:390px}.xHeroBtns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:17px}.xPrimary,.xSecondary{border:0;border-radius:14px;padding:12px 10px;font-size:8px;font-weight:1000}.xPrimary{background:#fff;color:#063d37;text-align:left}.xPrimary span{float:right;font-size:13px}.xSecondary{background:#ffffff16;color:#fff;border:1px solid #ffffff35}.xTrust{display:flex;gap:10px;flex-wrap:wrap;margin-top:13px;font-size:6.5px;color:#d8fff2}.xWallet{margin:12px;padding:15px;border-radius:22px;background:#fff;border:1px solid #e1efeb;box-shadow:0 10px 28px #073d3710}.xWalletTop{display:flex;justify-content:space-between}.xWalletTop small{display:block;font-size:6px;color:#78908a;font-weight:900;letter-spacing:1px}.xWalletTop strong{display:block;font-size:25px;margin-top:3px}.xWalletTop strong i{font-size:14px;font-style:normal}.xLevel{text-align:right;font-size:6px;color:#78908a;font-weight:900}.xLevel b{font-size:8px;color:#00a878}.xProgress{height:7px;background:#e7f3ef;border-radius:99px;margin-top:12px;overflow:hidden}.xProgress span{display:block;width:76%;height:100%;background:linear-gradient(90deg,#00a878,#55e0b9);border-radius:99px}.xWalletBottom{display:flex;justify-content:space-between;align-items:center;margin-top:9px;font-size:7px;color:#78908a}.xWalletBottom button,.xSectionHead button{border:0;background:none;color:#008c68;font-size:7px;font-weight:1000}.xSection{padding:3px 12px 12px}.xSectionHead{display:flex;align-items:end;justify-content:space-between;margin:10px 3px 10px}.xSectionHead small{font-size:6px;color:#8ba29d;letter-spacing:1px;font-weight:1000}.xSectionHead h2{font-size:16px;letter-spacing:-.4px;margin-top:2px}.xDiscoverRow{display:grid;grid-template-columns:1fr 1fr;gap:9px}.xDiscover{min-height:176px;padding:14px;border-radius:20px;color:#fff;position:relative;overflow:hidden}.xDiscover:after{content:'';position:absolute;width:100px;height:100px;border-radius:50%;right:-35px;bottom:-35px;background:#fff1}.xDiscover.water{background:linear-gradient(145deg,#063d37,#00a878)}.xDiscover.trip{background:linear-gradient(145deg,#163b67,#287cff)}.xMini{font-size:6px;font-weight:1000;letter-spacing:.8px;opacity:.85}.xDiscover h3{font-size:15px;line-height:1.12;margin-top:23px}.xDiscover p{font-size:7px;opacity:.8;margin-top:7px}.xDiscover button{position:absolute;bottom:13px;left:14px;border:1px solid #ffffff55;background:#ffffff18;color:#fff;border-radius:10px;padding:7px 9px;font-size:6px;font-weight:1000}.xSocialCard{display:flex;gap:11px;padding:14px;border-radius:20px;background:#fff;border:1px solid #e1efeb;box-shadow:0 8px 24px #073d370c}.xAvatar{width:42px;height:42px;border-radius:15px;background:linear-gradient(135deg,#00a878,#063d37);color:#fff;display:grid;place-items:center;font-weight:1000}.xSocialText{flex:1}.xSocialText>b{font-size:8px}.xSocialText>b span{color:#00a878}.xSocialText h3{font-size:12px;margin-top:8px}.xSocialText p{font-size:7px;color:#78908a;margin-top:3px}.xSocialBtns{display:flex;gap:6px;margin-top:10px}.xSocialBtns button{border:0;border-radius:9px;padding:7px 9px;background:#edf8f4;color:#007e60;font-size:6px;font-weight:1000}.xLoop{display:flex;align-items:center;justify-content:space-between;padding:15px 10px;border-radius:19px;background:#063d37;color:#fff}.xLoop>div{display:flex;flex-direction:column;align-items:center;gap:5px}.xLoop b{font-size:6px;color:#72e7c2}.xLoop span{font-size:7px;font-weight:900}.xLoop i{font-style:normal;color:#55d9b3;font-size:10px}.xLoopNote{font-size:7px;line-height:1.5;color:#78908a;text-align:center;margin:9px 20px 0}.xActionGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.xActionGrid button{border:1px solid #e1efeb;background:#fff;border-radius:17px;padding:13px;text-align:left}.xActionGrid b{font-size:19px;display:block}.xActionGrid span{display:block;font-size:9px;font-weight:1000;margin-top:7px}.xActionGrid small{display:block;color:#78908a;font-size:6px;margin-top:2px}.xLast{padding-bottom:5px}.xBottomMessage{text-align:center;font-size:6px;color:#9aaca8;letter-spacing:.7px;padding:12px}.xBottomMessage b{color:#00a878}
+</style>
+
+<style>
+/* ===== ADVANCED MARKETING ENGINE ===== */
+.mkHero{margin:15px;padding:20px;border-radius:25px;background:linear-gradient(135deg,#063d37,#00a878);color:#fff}
+.mkHero h1{font-size:25px}.mkHero p{font-size:9px;line-height:1.55;opacity:.82;margin-top:6px}
+.camp{background:#fff;border-radius:19px;padding:14px;margin-bottom:10px;border:1px solid #e3efeb;box-shadow:0 6px 18px #0000000a}
+.campTop{display:flex;justify-content:space-between;gap:10px}.camp h3{font-size:13px}.status{font-size:7px;padding:5px 7px;border-radius:8px;background:#e7faf2;color:#00895f;font-weight:bold}
+.bar{height:7px;background:#edf3f1;border-radius:20px;overflow:hidden;margin-top:9px}.bar i{display:block;height:100%;background:#00a878}
+.campGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}.mini{background:#f3faf7;padding:9px;border-radius:10px}.mini b{display:block;font-size:13px}.mini span{font-size:6px;color:#789}
+.target{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.chip{padding:6px 8px;border-radius:10px;background:#edf8f5;color:#087e63;font-size:7px;font-weight:bold}
+</style>
+
+
+<style>
+/* ===== PLOTTING PAID ADS ENGINE ===== */
+.plotAd{position:absolute;left:10px;top:65px;width:205px;padding:9px;border-radius:16px;background:#fff;color:#173b36;z-index:49;box-shadow:0 10px 35px #0008;border:2px solid #ffb51b}
+.plotAd .paid{font-size:7px;color:#8a6100;font-weight:bold;display:flex;justify-content:space-between}.plotAd img{width:100%;height:75px;object-fit:cover;border-radius:9px;margin-top:6px}.plotAd h3{font-size:11px;margin-top:5px}.plotAd p{font-size:7px;color:#789;margin-top:3px}.plotAd .plotBtns{display:flex;gap:5px;margin-top:6px}.plotAd button{flex:1;border:0;padding:7px;border-radius:8px;font-size:7px;font-weight:bold}.both{margin-top:7px;padding:7px;border-radius:9px;background:#fff8dc;color:#765400;font-size:7px;font-weight:bold}
+.plotPanel{background:linear-gradient(135deg,#fff8dd,#fff);border:1px solid #f1d88a}
+.radius{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:9px}.radius button{border:1px solid #e4ddd0;background:#fff;padding:8px 2px;border-radius:9px;font-size:7px}.radius button.active{background:#ffb51b;color:#fff;border-color:#ffb51b}
+.adMetric{background:#fff8df;border-radius:12px;padding:10px}.adMetric b{display:block;font-size:15px}.adMetric span{font-size:6px;color:#89775a}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+
+<style id="picniko-responsive-shell">
+/* PICNIKO APP SHELL — keep the existing app structure, only make desktop behave like a mobile app */
+html,body{width:100%;min-width:0;overflow-x:hidden}
+.app{width:100%;max-width:430px;margin:0 auto;min-height:100vh}
+.homePremium,.homeX{width:100%;max-width:none;margin:0}
+.bottom{width:100%;max-width:430px;left:50%;right:auto}
+.modalbox{width:100%;max-width:430px}
+@media (min-width:700px){
+  body{display:flex;justify-content:center;align-items:flex-start}
+  .app{width:430px;max-width:430px;margin:0 auto;box-shadow:0 0 45px rgba(0,0,0,.12)}
+  .homePremium{max-width:none;margin:0}
+  .homeTop{padding:22px 18px 24px;border-radius:0 0 30px 30px}
+  .homeBody{padding:15px}
+  .hGreeting h1{font-size:31px}
+  .feedVisual{height:125px}
+}
+</style>
+</head>
+
+<body>
+
+<style>
+/* V3: hide the old duplicate Home/header only; existing Scanner, Rewards,
+   Navigation, Marketing, Profile etc. remain available to the existing app. */
+.app > .header, .app > #home{display:none!important}
+</style>
+
+<style>#superHome,#picnikoV2{display:none!important}</style>
+
+<style>
+/* PICNIKO HOME V3 — Scan-first + Stories + Smart Feed */
+#picnikoV3{display:block!important;font-family:inherit;background:#f6faf8;min-height:100vh;padding-bottom:88px;color:#173f39}
+.p3top{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.97);backdrop-filter:blur(16px);border-bottom:1px solid #e3ece8;padding:9px 12px}
+.p3row{display:flex;align-items:center;justify-content:space-between}.p3logo{font-size:22px;font-weight:950;letter-spacing:-1px;color:#063d37}.p3logo span{color:#00a878}
+.p3scan{border:0;border-radius:13px;background:#063d37;color:#fff;padding:10px 12px;font-size:9px;font-weight:900;box-shadow:0 5px 14px #063d3724}
+.p3search{margin-top:9px;background:#f1f6f4;border:1px solid #dfeae5;border-radius:15px;padding:10px 12px;font-size:10px;color:#70857f}
+.p3storiesWrap{padding:12px 0 2px;background:#fff;border-bottom:1px solid #e8efec}.p3stories{display:flex;gap:13px;overflow-x:auto;padding:0 12px 9px;scrollbar-width:none}
+.p3story{min-width:58px;text-align:center}.p3ring{width:56px;height:56px;border-radius:50%;padding:2px;background:linear-gradient(135deg,#00a878,#ffd15c,#063d37);margin:auto}.p3avatar{width:100%;height:100%;border-radius:50%;display:grid;place-items:center;background:#e8f7f2;border:2px solid #fff;font-size:21px}.p3story b{display:block;font-size:7px;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.p3story small{font-size:6px;color:#8b9b96}
+.p3tabs{display:flex;gap:7px;overflow-x:auto;padding:10px 12px 2px;scrollbar-width:none}.p3tab{white-space:nowrap;border:1px solid #dce8e3;background:#fff;border-radius:13px;padding:8px 12px;font-size:8px;font-weight:900;color:#536b65}.p3tab.active{background:#063d37;color:#fff;border-color:#063d37}
+.p3section{padding:0 12px;margin:13px 0}.p3head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.p3head h2{font-size:14px;margin:0}.p3head small{font-size:7px;color:#00a878;font-weight:900}
+.p3post{background:#fff;border:1px solid #e1ebe7;border-radius:18px;padding:12px;margin-bottom:9px;box-shadow:0 5px 15px #063d3708}.p3postTop{display:flex;align-items:center;gap:8px}.p3av{width:34px;height:34px;border-radius:50%;background:#e1f5ee;display:grid;place-items:center;font-size:16px}.p3name{font-size:10px;font-weight:900}.p3meta{font-size:7px;color:#91a09c;margin-top:2px}.p3body{font-size:10px;line-height:1.5;color:#536c65;margin:9px 0}.p3acts{display:flex;justify-content:space-between;border-top:1px solid #edf2f0;padding-top:8px;font-size:8px;color:#667d77}
+.p3reel{height:240px;border-radius:20px;position:relative;overflow:hidden;background:linear-gradient(145deg,#083f39,#173c4d 58%,#12242a);color:#fff;padding:13px;display:flex;flex-direction:column;justify-content:flex-end;margin-bottom:9px}.p3play{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:#ffffff22;font-size:18px}.p3badge{position:absolute;top:10px;left:10px;background:#ffffff20;border:1px solid #ffffff2e;padding:5px 7px;border-radius:8px;font-size:7px}.p3reel h3{font-size:14px;margin:0}.p3reel p{font-size:8px;opacity:.8;margin:4px 0}.p3reelacts{display:flex;gap:13px;font-size:8px;margin-top:6px}
+.p3campaign{background:linear-gradient(135deg,#fff,#eef9f5);border:1px solid #d8eae3;border-radius:19px;padding:13px}.p3campaign .tag{font-size:7px;color:#008b68;font-weight:900}.p3campaign h3{font-size:13px;margin:5px 0}.p3campaign p{font-size:9px;color:#728680;line-height:1.5;margin:0}.p3btns{display:flex;gap:7px;margin-top:9px}.p3btn{flex:1;border:0;border-radius:10px;padding:9px 5px;font-size:8px;font-weight:900}.p3dark{background:#063d37;color:#fff}.p3light{background:#e0f4ed;color:#08795e}
+.p3concept{background:#063d37;color:#fff;border-radius:20px;padding:15px}.p3concept h3{font-size:15px;margin:0 0 5px}.p3concept p{font-size:9px;line-height:1.5;opacity:.82;margin:0 0 10px}.p3flow{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}.p3flow div{background:#ffffff14;border:1px solid #ffffff1c;border-radius:10px;padding:8px 3px;text-align:center;font-size:7px}.p3flow b{display:block;font-size:13px;margin-bottom:3px}
+.p3note{text-align:center;font-size:7px;color:#82918d;padding:4px 18px 12px;line-height:1.5}
+
+.p3creator{background:#fff;border:1px solid #e0ebe6;border-radius:19px;padding:13px}.p3creatorTop{display:flex;justify-content:space-between;align-items:center}.p3creatorTop strong{font-size:13px}.p3creatorTop span{font-size:8px;color:#008b68;font-weight:900}.p3creatorGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:9px}.p3metric{background:#f5f9f7;border-radius:12px;padding:9px 5px;text-align:center}.p3metric b{display:block;font-size:14px;color:#063d37}.p3metric small{font-size:7px;color:#789}.p3earning{margin-top:9px;background:linear-gradient(135deg,#fff8dc,#fff);border:1px solid #efdda0;border-radius:14px;padding:10px}.p3earning b{font-size:11px;color:#705300}.p3earning p{font-size:8px;color:#887754;line-height:1.45;margin:4px 0}.p3market{margin-top:9px;padding:10px;border-radius:14px;background:#063d37;color:#fff}.p3market b{font-size:11px}.p3market p{font-size:8px;opacity:.8;line-height:1.45;margin:4px 0}.p3market button{border:0;border-radius:9px;background:#20c997;color:#063d37;font-weight:900;font-size:8px;padding:8px 10px}
+</style>
+
+<div id="picnikoV3">
+  <div class="p3top">
+    <div class="p3row">
+      <div class="p3logo">PICNI<span>KO</span></div>
+      <button class="p3scan" type="button" aria-label="Scan a Mulshi Fresh bottle" onclick="showPage('scanner')">📷 BOTTLE SCAN</button>
+    </div>
+    <div class="p3search" role="button" tabindex="0" aria-label="Search location or place" onclick="openPlaceSearch()" onkeydown="if(event.key==='Enter'||event.key===' '){openPlaceSearch()}">
+      <span class="p3searchMain">📍 Search location / place</span><span>Google Maps • AI</span>
+    </div>
+  </div>
+
+  <!-- Search is followed by the user's requested circular Status/Feed/Activity area -->
+  <div class="p3storiesWrap">
+    <div class="p3stories">
+      <div class="p3story" onclick="toast('➕ Your status')"><div class="p3ring"><div class="p3avatar">＋</div></div><b>Your Status</b><small>Add</small></div>
+      <div class="p3story" onclick="toast('🌿 Nature reel opened')"><div class="p3ring"><div class="p3avatar">🌿</div></div><b>Nature</b><small>Reel</small></div>
+      <div class="p3story" onclick="toast('👤 Friend activity opened')"><div class="p3ring"><div class="p3avatar">👤</div></div><b>Akash</b><small>Activity</small></div>
+      <div class="p3story" onclick="toast('🎬 Creator reel opened')"><div class="p3ring"><div class="p3avatar">🎬</div></div><b>Creator</b><small>Reel</small></div>
+      <div class="p3story" onclick="toast('🏪 Partner campaign opened')"><div class="p3ring"><div class="p3avatar">🏪</div></div><b>Partner</b><small>Campaign</small></div>
+      <div class="p3story" onclick="toast('📢 Brand campaign opened')"><div class="p3ring"><div class="p3avatar">📢</div></div><b>Brand</b><small>Paid</small></div>
+      <div class="p3story" onclick="toast('👥 Group activity opened')"><div class="p3ring"><div class="p3avatar">👥</div></div><b>Group</b><small>Live</small></div>
+    </div>
+  </div>
+
+  <div class="p3quickMedia">
+    <button type="button" aria-label="Open Reels and Shorts" onclick="showPage('reels',this)">🎬<span>Reels / Shorts</span></button>
+    <button type="button" aria-label="Open Activity" onclick="showPage('activity',this)">⚡<span>Activity</span></button>
+    <button type="button" aria-label="Open Messages" onclick="showPage('messages',this)">💬<span>Messages</span></button>
+    <button type="button" aria-label="Open News" onclick="showPage('news',this)">📰<span>News</span></button>
+    <button type="button" aria-label="Open Groups" onclick="showPage('groups',this)">👥<span>Groups</span></button>
+  </div>
+  <button class="p3createMain" type="button" onclick="openCreateMenu()"><span>＋</span> Create</button>
+
+  <section class="p3ecosystem" aria-labelledby="p3EcosystemTitle">
+    <div class="p3ecosystemIcon">💧</div>
+    <div class="p3ecosystemCopy">
+      <div class="p3ecosystemTag">MULSHI FRESH • PICNIKO LOOP</div>
+      <h2 id="p3EcosystemTitle">Buy. Scan. Earn. Discover.</h2>
+      <p>Your genuine Mulshi Fresh bottle starts a verified PICNIKO journey.</p>
+    </div>
+    <div class="p3ecosystemActions">
+      <button type="button" onclick="showPage('scanner')">📷 Scan bottle</button>
+      <button type="button" onclick="showPage('rewards')">🎁 View rewards</button>
+    </div>
+  </section>
+
+  <section class="p3section p3influenceMini">
+    <div class="p3head"><h2>💰 Creator Influence</h2><small>CAMPAIGN EARNING</small></div>
+    <p>Followers, views आणि genuine engagement वाढल्यावर eligible brands कडून paid promotion opportunities मिळू शकतात.</p>
+  </section>
+
+  <!-- Below the circles: the actual mixed feed -->
+  <section class="p3section">
+    <div class="p3head"><h2>💬 Messaging &amp; Group Activity</h2><small>FOR YOU</small></div>
+    <div class="p3post">
+      <div class="p3postTop"><div class="p3av">👥</div><div><div class="p3name">Mulshi Travellers Group</div><div class="p3meta">8 new messages • 4 min ago</div></div></div>
+      <div class="p3body">उद्या weekend trip साठी कोण येत आहे? तुमच्या group मधील activity थेट Home वर.</div>
+      <div class="p3acts"><span>💬 18 replies</span><span>👥 Open Group</span></div>
+    </div>
+    <div class="p3post">
+      <div class="p3postTop"><div class="p3av">🔔</div><div><div class="p3name">Your PICNIKO Activity</div><div class="p3meta">Today • verified</div></div></div>
+      <div class="p3body">⭐ 27 verified bottles • 270 points. पुढच्या reward साठी scan journey continue करा.</div>
+      <div class="p3acts"><span>⭐ 270 points</span><span>🎁 Rewards</span></div>
+    </div>
+  </section>
+
+  <section class="p3section">
+    <div class="p3head"><h2>🎬 Reels / Shorts</h2><small>DISCOVER</small></div>
+    <div class="p3reel">
+      <div class="p3badge">COMMUNITY • REEL</div><div class="p3play">▶</div>
+      <h3>🌄 Weekend Escape Near You</h3><p>@traveller • 18K views</p>
+      <div class="p3reelacts"><span>❤️ 1.8K</span><span>💬 96</span><span>↗ Share</span><span>🔖 Save</span></div>
+    </div>
+  </section>
+
+
+  <section class="p3section">
+    <div class="p3head"><h2>💰 Influence &amp; Earning</h2><small>CREATOR CENTER</small></div>
+    <div class="p3creator">
+      <div class="p3creatorTop"><strong>Your Influence</strong><span>VERIFIED ACTIVITY</span></div>
+      <div class="p3creatorGrid">
+        <div class="p3metric"><b>18.4K</b><small>VIEWS</small></div>
+        <div class="p3metric"><b>2.1K</b><small>LIKES</small></div>
+        <div class="p3metric"><b>640</b><small>FOLLOWERS</small></div>
+      </div>
+      <div class="p3earning">
+        <b>🎯 Campaign earning potential</b>
+        <p>Brands/partners तुमच्या contentच्या relevance, genuine reach, engagement आणि campaign requirementsनुसार promotion देऊ शकतात.</p>
+        <button class="p3btn p3dark" style="width:100%" onclick="toast('💰 Creator earning dashboard opened')">OPEN EARNING DASHBOARD</button>
+      </div>
+      <div class="p3market">
+        <b>📣 Promote a product or service</b>
+        <p>Campaign निवडा → content तयार करा → approved campaign वर publish करा → verified results track करा.</p>
+        <button onclick="showPage('marketing')">VIEW CAMPAIGNS</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="p3section">
+    <div class="p3head"><h2>📢 Campaign Messages</h2><small>CREATOR OPPORTUNITY</small></div>
+    <div class="p3campaign">
+      <div class="tag">VERIFIED PAID CAMPAIGN • CLEARLY LABELLED</div>
+      <h3>🏕️ Explore Maharashtra Responsibly</h3>
+      <p>Brand campaign पाहा, genuine engagement करा आणि campaign eligibility पूर्ण झाल्यावर creator earning साठी qualify व्हा.</p>
+      <div class="p3btns">
+        <button class="p3btn p3dark" onclick="toast('▶ Campaign viewed')">▶ VIEW</button>
+        <button class="p3btn p3light" onclick="toast('❤️ Like recorded')">❤️ LIKE</button>
+        <button class="p3btn p3light" onclick="toast('🔔 Followed')">🔔 FOLLOW</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="p3note">PICNIKO मध्ये status, feed, messaging, reels, groups आणि paid campaigns एकत्र दिसतील. Users Post, Reel आणि Activity तयार करू शकतील; creatorsना verified campaignsमधून product/service promotionची earning opportunity मिळेल. Paid content स्पष्टपणे labelled राहील आणि earning authentic activity व campaign rules वर आधारित असेल.</div>
+</div>
+
+<style>#superHome{display:none!important}</style>
+
+<style>
+/* PICNIKO SUPER HOME V2 — discovery-first social ecosystem */
+#picnikoV2{font-family:inherit;background:#f6faf8;padding-bottom:90px}
+.p2top{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.96);backdrop-filter:blur(16px);border-bottom:1px solid #e5eeea;padding:9px 12px}
+.p2row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.p2logo{font-size:21px;font-weight:950;letter-spacing:-1px;color:#063d37}.p2logo span{color:#00a878}
+.p2actions{display:flex;gap:6px}.p2ico{width:38px;height:38px;border:0;border-radius:12px;background:#edf7f3;font-size:17px}
+.p2search{margin-top:8px;background:#f1f6f4;border:1px solid #e0ebe6;border-radius:15px;padding:10px 12px;font-size:11px;color:#70857f}
+.p2hero{margin:12px;border-radius:24px;padding:18px;color:#fff;background:linear-gradient(135deg,#063d37,#008f70 62%,#20c997);box-shadow:0 15px 34px #063d3724}
+.p2heroTop{display:flex;justify-content:space-between;align-items:center}.p2heroTag{font-size:8px;letter-spacing:1px;font-weight:800;opacity:.8}
+.p2scan{background:#fff;color:#063d37;border:0;border-radius:12px;padding:9px 11px;font-weight:900;font-size:9px}
+.p2hero h1{font-size:26px;line-height:1.05;margin:9px 0 5px}.p2hero p{font-size:10px;line-height:1.5;opacity:.88;margin:0}
+.p2wallet{margin:11px 12px;background:#fff;border:1px solid #e2ece8;border-radius:18px;padding:12px;display:flex;align-items:center;gap:11px;box-shadow:0 6px 18px #063d370b}
+.p2coin{width:45px;height:45px;border-radius:14px;background:#fff3c9;display:grid;place-items:center;font-size:22px}
+.p2wallet b{font-size:16px;color:#745600}.p2wallet span{display:block;font-size:7px;color:#8b7a56;margin-top:2px}
+.p2tabs{display:flex;gap:7px;overflow:auto;padding:0 12px 5px;scrollbar-width:none}.p2tab{white-space:nowrap;border:1px solid #dce8e3;background:#fff;border-radius:13px;padding:9px 12px;font-size:9px;font-weight:900;color:#48635d}.p2tab.active{background:#063d37;color:#fff;border-color:#063d37}
+.p2section{padding:0 12px;margin:15px 0}.p2head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.p2head h2{font-size:15px;color:#173f39;margin:0}.p2head small{font-size:7px;color:#00a878;font-weight:900}
+.p2feed{display:flex;flex-direction:column;gap:9px}.p2post{background:#fff;border:1px solid #e2ebe7;border-radius:18px;padding:12px;box-shadow:0 5px 16px #063d3708}
+.p2postTop{display:flex;align-items:center;gap:8px}.p2av{width:33px;height:33px;border-radius:50%;display:grid;place-items:center;background:#e1f5ee;font-size:15px}.p2name{font-size:10px;font-weight:900;color:#244b45}.p2meta{font-size:7px;color:#90a09b;margin-top:2px}
+.p2postBody{font-size:10px;color:#526b65;line-height:1.5;margin:9px 0}.p2postActions{display:flex;justify-content:space-between;border-top:1px solid #edf2f0;padding-top:8px;font-size:8px;color:#657c76}
+.p2reel{height:245px;border-radius:20px;position:relative;overflow:hidden;background:linear-gradient(145deg,#0a4940,#173b4b 55%,#101e26);color:#fff;padding:13px;display:flex;flex-direction:column;justify-content:flex-end}
+.p2reel:before{content:"▶";position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:#ffffff20;font-size:19px}
+.p2reelBadge{position:absolute;top:10px;left:10px;background:#ffffff20;border:1px solid #ffffff30;border-radius:8px;padding:5px 7px;font-size:7px}.p2reel h3{font-size:14px;margin:0}.p2reel p{font-size:8px;opacity:.8;margin:4px 0}.p2reelAct{display:flex;gap:14px;font-size:9px;margin-top:7px}
+.p2campaign{background:linear-gradient(135deg,#fff,#f0faf6);border:1px solid #d9ebe4;border-radius:20px;padding:13px}.p2campaignTag{font-size:7px;color:#008966;font-weight:900}.p2campaign h3{font-size:13px;color:#193f39;margin:5px 0}.p2campaign p{font-size:9px;color:#728681;line-height:1.45}.p2campaignBtns{display:flex;gap:7px;margin-top:9px}.p2cbtn{flex:1;border:0;border-radius:10px;padding:9px;font-size:8px;font-weight:900}.p2cbtn.dark{background:#063d37;color:#fff}.p2cbtn.light{background:#e1f4ed;color:#087b60}
+.p2earn{background:#fff8dc;border:1px solid #efdda0;border-radius:19px;padding:13px}.p2earnRow{display:flex;justify-content:space-between;align-items:center}.p2earn strong{font-size:20px;color:#7b5b00}.p2bar{height:7px;background:#eee4c5;border-radius:10px;margin:10px 0}.p2bar i{display:block;width:68%;height:100%;border-radius:10px;background:#ddb02d}.p2earnNote{font-size:7px;color:#8a7955;line-height:1.5}
+.p2notice{text-align:center;font-size:7px;color:#84938f;padding:2px 20px 10px;line-height:1.5}
+</style>
+
+<div id="picnikoV2">
+  <div class="p2top">
+    <div class="p2row">
+      <div class="p2logo">PICNI<span>KO</span></div>
+      <div class="p2actions">
+        <button class="p2ico" onclick="toast('💬 Messages opened')">💬</button>
+        <button class="p2ico" onclick="toast('🔔 Activity opened')">🔔</button>
+        <button class="p2ico" onclick="showPage('profile')">👤</button>
+      </div>
+    </div>
+    <div class="p2search" onclick="toast('🔎 Search people, news, reels, campaigns, places and groups')">🔎 Search anything on PICNIKO</div>
+  </div>
+
+  <section class="p2hero">
+    <div class="p2heroTop"><div class="p2heroTag">PICNIKO • YOUR DAILY WORLD</div><button class="p2scan" onclick="showPage('scanner')">📷 SCAN</button></div>
+    <h1>Discover. Connect.<br>Earn.</h1>
+    <p>तुमच्या आवडीचे updates, reels, messages, groups आणि verified campaigns — एका smart feed मध्ये.</p>
+  </section>
+
+  <div class="p2wallet">
+    <div class="p2coin">⭐</div>
+    <div style="flex:1"><b>270 Points</b><span>27 verified Mulshi Fresh bottles • next reward 500 pts</span></div>
+    <button class="p2scan" style="background:#063d37;color:#fff" onclick="showPage('rewards')">REWARDS</button>
+  </div>
+
+  <div class="p2tabs">
+    <button class="p2tab active" onclick="toast('✨ Smart feed selected')">✨ My Feed</button>
+    <button class="p2tab" onclick="toast('🟢 Status selected')">🟢 Status</button>
+    <button class="p2tab" onclick="toast('👥 Group Activity selected')">👥 Groups</button>
+    <button class="p2tab" onclick="toast('🎬 Reels selected')">🎬 Reels</button>
+    <button class="p2tab" onclick="toast('📢 Campaigns selected')">📢 Campaigns</button>
+  </div>
+
+  <section class="p2section">
+    <div class="p2head"><h2>💬 Messages &amp; Activity</h2><small>LIVE</small></div>
+    <div class="p2feed">
+      <div class="p2post">
+        <div class="p2postTop"><div class="p2av">👥</div><div><div class="p2name">Mulshi Travellers Group</div><div class="p2meta">8 new messages • 4 min ago</div></div></div>
+        <div class="p2postBody">उद्या weekend trip साठी कोण येत आहे? Group activity येथे थेट दिसेल.</div>
+        <div class="p2postActions"><span>💬 18 replies</span><span>👥 Open Group</span></div>
+      </div>
+      <div class="p2post">
+        <div class="p2postTop"><div class="p2av">🔔</div><div><div class="p2name">Your Activity</div><div class="p2meta">Today</div></div></div>
+        <div class="p2postBody">⭐ तुम्ही 10 bottles verify केल्यास तुमचा next reward जवळ येईल.</div>
+        <div class="p2postActions"><span>⭐ +270 points</span><span>🎁 View Rewards</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="p2section">
+    <div class="p2head"><h2>🎬 Reels</h2><small>WATCH • ENGAGE</small></div>
+    <div class="p2feed">
+      <div class="p2reel"><div class="p2reelBadge">COMMUNITY REEL</div><h3>🌄 Weekend Escape Near You</h3><p>@traveller • 18K views</p><div class="p2reelAct"><span>❤️ 1.8K</span><span>💬 96</span><span>↗ Share</span><span>🔖 Save</span></div></div>
+    </div>
+  </section>
+
+  <section class="p2section">
+    <div class="p2head"><h2>📢 Campaign Feed</h2><small>EARNING OPPORTUNITY</small></div>
+    <div class="p2campaign">
+      <div class="p2campaignTag">VERIFIED BRAND CAMPAIGN • SPONSORED</div>
+      <h3>🏕️ Explore Maharashtra Responsibly</h3>
+      <p>Campaign content पाहा, genuine engagement करा आणि eligibility पूर्ण झाल्यावर creator earning साठी qualify व्हा.</p>
+      <div class="p2campaignBtns">
+        <button class="p2cbtn dark" onclick="toast('▶ Campaign viewed')">▶ VIEW</button>
+        <button class="p2cbtn light" onclick="toast('❤️ Engagement recorded')">❤️ LIKE</button>
+        <button class="p2cbtn light" onclick="toast('🔔 Campaign followed')">🔔 FOLLOW</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="p2section">
+    <div class="p2head"><h2>💰 Creator Earning</h2><small>FAIR &amp; VERIFIED</small></div>
+    <div class="p2earn">
+      <div class="p2earnRow"><div><b style="font-size:13px;color:#634d10">Creator Progress</b><div class="p2earnNote">Views + genuine engagement + verified campaigns</div></div><strong>₹0</strong></div>
+      <div class="p2bar"><i></i></div>
+      <div class="p2earnNote">महत्त्वाचे: Like/View/Subscribe ला आपोआप पैसे न देता, PICNIKO verified campaign rules, quality, authenticity आणि eligibility नुसार earning ठरवेल.</div>
+      <button class="p2cbtn dark" style="width:100%;margin-top:9px;background:#8a6500;color:#fff" onclick="toast('💰 Creator Center opened')">OPEN CREATOR CENTER</button>
+    </div>
+  </section>
+
+  <section class="p2section">
+    <div class="p2head"><h2>💧 Mulshi Fresh Trust</h2><small>CORE</small></div>
+    <div class="p2campaign">
+      <div class="p2campaignTag">BOTTLE → QR → VERIFY → REWARD</div>
+      <h3>तुमची bottle journey इथून सुरू होते</h3>
+      <p>Verified bottle scan, reward wallet आणि water-quality transparency यांना Home मधून थेट access.</p>
+      <div class="p2campaignBtns"><button class="p2cbtn dark" onclick="showPage('scanner')">📷 SCAN</button><button class="p2cbtn light" onclick="showPage('quality')">🔬 QUALITY</button></div>
+    </div>
+  </section>
+
+  <div class="p2notice">PICNIKO social network + discovery + verified earning ecosystem. Paid campaigns clearly labelled; earning depends on authentic activity and campaign eligibility.</div>
+</div>
+
+
+<!-- PICNIKO SUPER HOME 10U-2 -->
+<style>
+#superHome{font-family:inherit;padding-bottom:92px}
+.shTop{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border-bottom:1px solid #e7eee9;padding:10px 12px}
+.shTopRow{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.shBrand{font-weight:900;font-size:21px;letter-spacing:-.7px;color:#063d37}.shBrand span{color:#00a878}
+.shIcon{border:0;background:#eef8f4;border-radius:13px;width:39px;height:39px;font-size:17px}
+.shSearch{margin-top:9px;background:#f3f7f5;border:1px solid #e2ebe7;border-radius:15px;padding:11px 13px;color:#789;font-size:12px}
+.shHero{margin:12px;border-radius:25px;padding:22px 18px;color:#fff;background:linear-gradient(135deg,#043c35,#008f70 58%,#20c997);box-shadow:0 16px 35px #063d3726;position:relative;overflow:hidden}
+.shHero:after{content:"";position:absolute;width:150px;height:150px;border-radius:50%;right:-55px;top:-45px;background:#ffffff18}
+.shEyebrow{font-size:9px;font-weight:800;opacity:.78;letter-spacing:1px}.shHero h1{font-size:29px;line-height:1.03;margin:7px 0}.shHero p{font-size:11px;line-height:1.55;opacity:.88;max-width:285px}
+.shActions{display:flex;gap:8px;margin-top:15px}.shBtn{border:0;border-radius:13px;padding:11px 13px;font-weight:800;font-size:10px}.shPrimary{background:#fff;color:#063d37}.shGhost{background:#ffffff18;color:#fff;border:1px solid #ffffff38}
+.shStrip{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;padding:0 12px;margin-bottom:14px}.shStat{background:#fff;border:1px solid #e6eeea;border-radius:15px;padding:10px 6px;text-align:center;box-shadow:0 5px 16px #063d3710}.shStat b{display:block;font-size:16px;color:#063d37}.shStat span{font-size:7px;color:#789}
+.shSection{padding:0 12px;margin:16px 0}.shHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}.shHead h2{font-size:16px;margin:0;color:#153f39}.shHead small{font-size:8px;color:#00a878;font-weight:800}
+.shGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.shCard{background:#fff;border:1px solid #e4ece8;border-radius:18px;padding:13px;box-shadow:0 7px 20px #063d370b}.shCard b{font-size:12px;color:#183f3a}.shCard p{font-size:9px;color:#789;line-height:1.45;margin:5px 0 9px}
+.shFeature{background:linear-gradient(135deg,#fff,#f0faf6);border:1px solid #dbece5;border-radius:19px;padding:14px;display:flex;gap:12px;align-items:center}.shBubble{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;background:#dff7ee;font-size:24px;flex:none}
+.shFeed{display:flex;gap:9px;overflow:hidden}.shPost{min-width:205px;background:#fff;border:1px solid #e5ece9;border-radius:18px;padding:12px}.shPostTop{display:flex;gap:8px;align-items:center}.shAvatar{width:31px;height:31px;border-radius:50%;background:#e1f4ed;display:grid;place-items:center;font-size:15px}.shPost p{font-size:9px;color:#536e68;line-height:1.5;margin:9px 0}.shPostAct{display:flex;justify-content:space-between;font-size:8px;color:#789}
+.shReel{height:230px;border-radius:21px;overflow:hidden;position:relative;background:linear-gradient(160deg,#0a4a41,#133b51 55%,#0b2224);color:#fff;padding:15px;display:flex;flex-direction:column;justify-content:flex-end}.shReel:before{content:"▶";position:absolute;left:50%;top:43%;transform:translate(-50%,-50%);width:48px;height:48px;border-radius:50%;background:#ffffff25;display:grid;place-items:center;font-size:18px}.shReel h3{margin:0;font-size:14px}.shReel p{margin:4px 0;font-size:8px;opacity:.8}.shReelActions{display:flex;gap:12px;font-size:9px;margin-top:7px}
+.shEarn{background:linear-gradient(135deg,#fff8dc,#fff);border:1px solid #f0df9c;border-radius:20px;padding:15px}.shEarnTop{display:flex;justify-content:space-between;align-items:center}.shPoints{font-size:25px;font-weight:900;color:#8a6500}.shProgress{height:8px;border-radius:10px;background:#eee5c7;margin:11px 0}.shProgress i{display:block;width:68%;height:100%;border-radius:10px;background:#e4ad22}
+.shNav{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.shNav button{border:1px solid #e1ebe7;background:#fff;border-radius:15px;padding:11px 4px;font-size:9px;font-weight:800;color:#234b45}
+.shNotice{font-size:8px;color:#718983;text-align:center;line-height:1.5;padding:2px 18px 12px}
+</style>
+
+<div id="superHome">
+  <div class="shTop">
+    <div class="shTopRow">
+      <div class="shBrand">PICNI<span>KO</span></div>
+      <div style="display:flex;gap:6px">
+        <button class="shIcon" onclick="toast('💬 Messages opened')">💬</button>
+        <button class="shIcon" onclick="toast('🔔 Notifications opened')">🔔</button>
+        <button class="shIcon" onclick="showPage('profile')">👤</button>
+      </div>
+    </div>
+    <div class="shSearch" onclick="toast('🔎 PICNIKO universal search')">🔎  Search people, places, reels, offers &amp; Mulshi Fresh</div>
+  </div>
+
+  <section class="shHero">
+    <div class="shEyebrow">YOUR DAILY PICNIKO</div>
+    <h1>Discover.<br>Connect.<br>Earn.</h1>
+    <p>एकाच जागी तुमचे messages, useful updates, short videos, nearby discovery आणि verified rewards.</p>
+    <div class="shActions">
+      <button class="shBtn shPrimary" onclick="showPage('scanner')">📷 SCAN &amp; EARN</button>
+      <button class="shBtn shGhost" onclick="showPage('navigation')">📍 EXPLORE</button>
+    </div>
+  </section>
+
+  <div class="shStrip">
+    <div class="shStat"><b>270</b><span>POINTS</span></div>
+    <div class="shStat"><b>27</b><span>BOTTLES</span></div>
+    <div class="shStat"><b>12</b><span>NEW</span></div>
+    <div class="shStat"><b>4.8K</b><span>DISCOVERED</span></div>
+  </div>
+
+  <section class="shSection">
+    <div class="shHead"><h2>⚡ Quick Access</h2><small>YOUR SPACE</small></div>
+    <div class="shNav">
+      <button onclick="toast('💬 Messages')">💬<br>Messages</button>
+      <button onclick="showPage('reels')">🎬<br>Reels</button>
+      <button onclick="showPage('friends')">👥<br>Circle</button>
+      <button onclick="showPage('rewards')">🎁<br>Rewards</button>
+    </div>
+  </section>
+
+  <section class="shSection">
+    <div class="shHead"><h2>💧 Your Mulshi Fresh Journey</h2><small>VERIFIED</small></div>
+    <div class="shFeature">
+      <div class="shBubble">💧</div>
+      <div style="flex:1"><b>27 verified bottles</b><p style="font-size:9px;color:#789;margin:4px 0">Scan your next genuine bottle and continue your reward journey.</p>
+      <button class="shBtn" style="background:#063d37;color:#fff" onclick="showPage('scanner')">SCAN NOW</button></div>
+    </div>
+  </section>
+
+  <section class="shSection">
+    <div class="shHead"><h2>📰 For You</h2><small>PERSONALIZED</small></div>
+    <div class="shFeed">
+      <div class="shPost"><div class="shPostTop"><div class="shAvatar">🌿</div><div><b>Nature Today</b><div style="font-size:7px;color:#8aa">2 min ago</div></div></div><p>आजचा local nature update आणि responsible travel tip.</p><div class="shPostAct"><span>❤️ 842</span><span>💬 38</span><span>↗ Share</span></div></div>
+      <div class="shPost"><div class="shPostTop"><div class="shAvatar">📢</div><div><b>PICNIKO Update</b><div style="font-size:7px;color:#8aa">8 min ago</div></div></div><p>तुमच्या जवळील नवीन offer आणि community update येथे दिसतील.</p><div class="shPostAct"><span>❤️ 521</span><span>💬 21</span><span>🔖 Save</span></div></div>
+    </div>
+  </section>
+
+  <section class="shSection">
+    <div class="shHead"><h2>🎬 Reels — Watch &amp; Discover</h2><small>COMMUNITY</small></div>
+    <div class="shGrid">
+      <div class="shReel"><h3>🌄 Weekend Near You</h3><p>@traveller • 18K views</p><div class="shReelActions"><span>❤️ 1.8K</span><span>💬 96</span><span>↗</span></div></div>
+      <div class="shReel"><div style="position:absolute;top:11px;left:11px;font-size:7px;background:#ffffff20;padding:5px 7px;border-radius:8px">SPONSORED • RELEVANT</div><h3>🏕️ Explore &amp; Save</h3><p>Verified local offer • 4.7★</p><div class="shReelActions"><span>❤️ 934</span><span>💬 42</span><span>📍 GO</span></div></div>
+    </div>
+  </section>
+
+  <section class="shSection">
+    <div class="shHead"><h2>💰 Your Earning Zone</h2><small>CREATOR</small></div>
+    <div class="shEarn">
+      <div class="shEarnTop"><div><b style="font-size:14px">Creator Balance</b><p style="font-size:8px;color:#8a7a55;margin:3px 0">Eligible activity • verified campaigns</p></div><div class="shPoints">₹0</div></div>
+      <div class="shProgress"><i></i></div>
+      <div style="display:flex;justify-content:space-between;font-size:8px;color:#89775a"><span>Creator progress</span><b>68%</b></div>
+      <button class="shBtn" style="margin-top:10px;background:#e6b52d;color:#fff;width:100%" onclick="toast('💰 Creator dashboard opened')">OPEN CREATOR CENTER</button>
+    </div>
+  </section>
+
+  <section class="shSection">
+    <div class="shHead"><h2>📍 Near You</h2><small>SMART DISCOVERY</small></div>
+    <div class="shCard"><b>🏪 Verified nearby partner</b><p>तुमच्या route वर relevant offer उपलब्ध आहे. Location-based discovery userच्या परवानगीनेच वापरली जाईल.</p><button class="shBtn" style="background:#00a878;color:#fff" onclick="showPage('navigation')">EXPLORE MAP</button></div>
+  </section>
+
+  <section class="shSection">
+    <div class="shHead"><h2>🔬 Water Trust</h2><small>MULSHI FRESH</small></div>
+    <div class="shGrid">
+      <div class="shCard"><b>✓ Bottle Verified</b><p>Unique QR journey</p><button class="shBtn" style="background:#e7f7f1" onclick="showPage('scanner')">VERIFY</button></div>
+      <div class="shCard"><b>🧪 Quality</b><p>Batch &amp; lab transparency</p><button class="shBtn" style="background:#e7f7f1" onclick="showPage('quality')">VIEW</button></div>
+    </div>
+  </section>
+
+  <div class="shNotice">PICNIKO is not just a social feed. It connects people, useful information, discovery, verified product journeys and responsible earning in one ecosystem.</div>
+</div>
+
+<div class="app">
+
+<header class="header">
+<div class="logo">PICNI<span>KO</span><small>MULSHI FRESH • BUY • SCAN • EARN</small></div>
+<div class="row" style="align-items:center"><button class="btn green" id="authBtn" onclick="openAuth()">LOGIN</button><div class="avatar" id="avatar">SS</div></div>
+</header>
+
+<!-- HOME -->
+<div class="page active" id="home">
+<div class="homeX">
+  <header class="xHead"><div><div class="xLogo">PICNI<span>KO</span></div><div class="xSub">MULSHI FRESH • YOUR EVERYDAY DISCOVERY</div></div><div class="xHeadBtns"><button onclick="toast('🔔 You are all caught up')">🔔</button><button onclick="showPage('profile')">SS</button></div></header>
+
+  <section class="xHero">
+    <div class="xGlow"></div><div class="xTag">💧 VERIFIED • MULSHI FRESH</div>
+    <h1>तुमचा bottle,<br><em>तुमची journey.</em></h1>
+    <p>PICNIKO वर फक्त scroll करू नका. <b>काहीतरी मिळवा, शोधा, जिंका आणि share करा.</b></p>
+    <div class="xHeroBtns"><button class="xPrimary" onclick="showPage('scanner')">📷 BOTTLE SCAN करा <span>→</span></button><button class="xSecondary" onclick="showPage('navigation')">📍 जवळ काय आहे?</button></div>
+    <div class="xTrust"><span>✓ Genuine bottle</span><span>✓ Reward eligible</span><span>✓ Water journey</span></div>
+  </section>
+
+  <section class="xWallet">
+    <div class="xWalletTop"><div><small>MY PICNIKO VALUE</small><strong id="homePoints">270 <i>⭐</i></strong></div><div class="xLevel">LEVEL 02<br><b>FRESH EXPLORER</b></div></div>
+    <div class="xProgress"><span></span></div><div class="xWalletBottom"><span>30 points to next benefit</span><button onclick="showPage('rewards')">OPEN REWARDS →</button></div>
+  </section>
+
+  <section class="xSection"><div class="xSectionHead"><div><small>NOT A GENERIC FEED</small><h2>आज तुमच्यासाठी</h2></div><button onclick="showPage('navigation')">See all →</button></div>
+    <div class="xDiscoverRow">
+      <article class="xDiscover water"><div class="xMini">💧 WATER</div><h3>आजची Mulshi Fresh<br>quality पाहा</h3><p>Batch • Test • Trust</p><button onclick="showPage('quality')">VIEW QUALITY</button></article>
+      <article class="xDiscover trip"><div class="xMini">📍 NEARBY</div><h3>तुमच्या route वर<br>काय आहे?</h3><p>Places • Offers • Discovery</p><button onclick="showPage('navigation')">EXPLORE MAP</button></article>
+    </div>
+  </section>
+
+  <section class="xSection"><div class="xSectionHead"><div><small>PICNIKO COMMUNITY</small><h2>लोक काय शोधत आहेत?</h2></div><button onclick="showPage('reels')">Reels →</button></div>
+    <div class="xSocialCard"><div class="xAvatar">P</div><div class="xSocialText"><b>@picniko_community <span>✓</span></b><h3>🌿 Weekend nature moments</h3><p>Mulshi • Pawna • Lonavala</p><div class="xSocialBtns"><button onclick="showPage('reels')">▶ WATCH</button><button onclick="showPage('friends')">＋ CONNECT</button></div></div></div>
+  </section>
+
+  <section class="xSection"><div class="xSectionHead"><div><small>ONE PRODUCT → MANY BENEFITS</small><h2>PICNIKO Loop</h2></div></div>
+    <div class="xLoop"><div><b>01</b><span>💧 Buy</span></div><i>→</i><div><b>02</b><span>📷 Scan</span></div><i>→</i><div><b>03</b><span>⭐ Earn</span></div><i>→</i><div><b>04</b><span>🌍 Discover</span></div></div>
+    <p class="xLoopNote">तुमच्या genuine Mulshi Fresh bottle पासून सुरू होणारी हीच PICNIKO ची वेगळी ओळख.</p>
+  </section>
+
+  <section class="xSection xLast"><div class="xActionGrid"><button onclick="showPage('rewards')"><b>🎁</b><span>Rewards</span><small>तुमचे benefits</small></button><button onclick="showPage('quality')"><b>🔬</b><span>Water Trust</span><small>quality journey</small></button><button onclick="showPage('friends')"><b>👥</b><span>My Circle</span><small>connect & share</small></button><button onclick="showPage('podcast')"><b>🎙️</b><span>Voices</span><small>real people</small></button></div></section>
+
+  <div class="xBottomMessage">PICNIKO • <b>Open. Discover. Earn. Belong.</b></div>
+</div></div>
+<div class="page" id="navigation">
+<div class="section"><div class="head"><h2>🛰️ Live Navigation</h2><span id="gps">GPS READY</span></div></div>
+<div class="map">
+<div class="mapsearch">🏕️ Mulshi Lake • 🚗 28 min</div>
+<div class="route"></div><div class="car">🚗</div><div class="pin"><span>📍</span></div>
+
+
+<div class="plotAd" id="plotAd">
+<div class="paid"><span>🏡 PAID PLOTTING</span><span>5 KM</span></div>
+<img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=85&w=700">
+<h3>🌿 Mulshi Nature Plots</h3>
+<p>1000–2000 sq.ft. • Weekend / Nature Plotting</p>
+<div class="both">⚡ Plotting + Nearby Partner can show together</div>
+<div class="plotBtns"><button style="background:#ffb51b;color:#fff" onclick="toast('🏡 Plotting project opened')">VIEW</button><button style="background:#063d37;color:#fff" onclick="toast('🗺️ Plotting navigation opened')">NAVIGATE</button></div>
+</div>
+
+<div class="partnerpost" id="partnerPost">
+<div class="live"><span class="dot"></span> LIVE PARTNER • <span id="distance">25m</span></div>
+<img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=85&w=600">
+<h3>🏨 Green Valley Resort</h3>
+<p>⭐ 4.6 • relevant to your route</p>
+<div class="offer">🎁 10% OFF for PICNIKO travellers</div>
+<div class="postbtns"><button style="background:#00a878;color:#fff" onclick="toast('🏨 Partner offer opened')">VIEW</button><button style="background:#ffffff15;color:#fff" onclick="partnerGo()">GO</button></div>
+</div>
+
+<div class="navcard">
+<div class="navtop"><h3>🏕️ Mulshi Lake</h3><div class="eta">28 min</div></div>
+<div class="details">📍 24.6 km • 🚗 Fastest Route • 🟢 Traffic Normal</div>
+<button class="start" onclick="startNav()">▶ START LIVE NAVIGATION</button>
+</div>
+</div>
+
+<div class="section">
+<div class="head"><h2>📍 20m Partner Visibility</h2><span>SMART RULE</span></div>
+<div class="card">
+<p style="font-size:9px;line-height:1.5;color:var(--muted)">Partner posts are intended to appear only when the user is within the configured proximity rule. If two eligible partners are within the same proximity zone, the engine can show a combined nearby card.</p>
+<button class="btn green" style="margin-top:9px" onclick="simulatePartner()">SIMULATE DISTANCE</button>
+
+<div class="card plotPanel">
+<h3 style="font-size:15px">🏡 Plotting Paid-Ad Rule</h3>
+<p style="font-size:8px;color:#789;line-height:1.55;margin-top:5px">Plotting campaigns use a separate paid radius. They are not restricted to the 20m normal-partner rule.</p>
+<div class="radius">
+<button class="active" onclick="setRadius(this,1)">1 KM</button>
+<button onclick="setRadius(this,5)">5 KM</button>
+<button onclick="setRadius(this,10)">10 KM</button>
+<button onclick="setRadius(this,25)">25 KM</button>
+</div>
+<div class="grid2" style="margin-top:10px">
+<div class="adMetric"><b id="plotReach">24.8K</b><span>PLOT AD REACH</span></div>
+<div class="adMetric"><b>386</b><span>ENQUIRIES</span></div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+
+<!-- MARKET -->
+<div class="page" id="market">
+<div class="section">
+<div class="head"><h2>🏪 Partner Marketing</h2><span>DISCOVERY</span></div>
+
+<div class="card business">
+<img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?q=85&w=500">
+<div class="info"><h3>🏨 Green Valley Resort</h3><p>⭐ 4.6 • route partner</p><div class="tags"><span class="tag">RESORT</span><span class="tag">PARTNER</span></div><div class="offer">🎁 10% OFF PICNIKO USERS</div><button class="btn green" onclick="toast('🗺️ Partner navigation opened')">NAVIGATE</button></div>
+</div>
+
+<div class="card business">
+<img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=85&w=500">
+<div class="info"><h3>🍴 Lake View Restaurant</h3><p>⭐ 4.5 • 1.1 km</p><div class="tags"><span class="tag">FOOD</span><span class="tag">FAMILY</span></div><div class="offer">🍽️ FREE DESSERT WITH QR</div><button class="btn green" onclick="toast('🎁 Offer opened')">CLAIM OFFER</button></div>
+</div>
+
+<div class="card business">
+<div style="width:78px;height:78px;border-radius:15px;background:#e8f8f3;display:grid;place-items:center;font-size:30px">💧</div>
+<div class="info"><h3>Mulshi Fresh Retail Partner</h3><p>Verified product availability</p><div class="offer">💧 BUY MULSHI FRESH HERE</div><button class="btn green" onclick="toast('📍 Retailer location opened')">NAVIGATE</button></div>
+</div>
+
+<div class="card">
+<h3 style="font-size:15px">📢 Marketing Engine</h3>
+<p style="font-size:8px;color:var(--muted);line-height:1.5;margin-top:5px">PICNIKO can distribute relevant partner visibility through discovery and navigation. Partner marketing does not replace the Mulshi Fresh product; it supports the product ecosystem.</p>
+<div class="grid2" style="margin-top:10px">
+<div class="metric"><b>126</b><span>PARTNERS</span></div><div class="metric"><b>48K</b><span>MONTHLY REACH</span></div>
+<div class="metric"><b>8.4K</b><span>OFFER VIEWS</span></div><div class="metric"><b>1.2K</b><span>NAVIGATIONS</span></div>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- ADVANCED MARKETING ENGINE -->
+<div class="page" id="marketing">
+<div class="mkHero">
+<div style="font-size:8px;opacity:.75">PICNIKO GROWTH SYSTEM</div>
+<h1>📢 Marketing Engine</h1>
+<p>Mulshi Fresh remains the core product. Bottle QR acquisition, app engagement, navigation discovery and partner visibility work together.</p>
+<div class="row" style="margin-top:13px">
+<button class="btn white" onclick="createCampaign()">+ CREATE CAMPAIGN</button>
+<button class="btn" style="background:#ffffff18;color:#fff;border:1px solid #ffffff30" onclick="toast('📊 Marketing analytics refreshed')">ANALYTICS</button>
+</div>
+</div>
+
+<div class="section">
+<div class="head"><h2>🎯 Campaign Overview</h2><span>LIVE ENGINE</span></div>
+<div class="card">
+<div class="campGrid">
+<div class="mini"><b>48K</b><span>REACH</span></div>
+<div class="mini"><b>8.4K</b><span>OFFER VIEWS</span></div>
+<div class="mini"><b>1.2K</b><span>NAVIGATIONS</span></div>
+</div>
+<div class="campGrid">
+<div class="mini"><b>620</b><span>QR SCANS</span></div>
+<div class="mini"><b>310</b><span>NEW USERS</span></div>
+<div class="mini"><b>126</b><span>PARTNERS</span></div>
+</div>
+</div>
+
+<div class="head"><h2>💧 Product Acquisition</h2><span>CORE</span></div>
+<div class="camp">
+<div class="campTop"><h3>Mulshi Fresh • QR Customer Growth</h3><span class="status">ACTIVE</span></div>
+<p style="font-size:8px;color:#789;margin-top:5px">Bottle purchase → first verified scan → customer ID → reward journey.</p>
+<div class="bar"><i style="width:76%"></i></div>
+<div style="font-size:7px;color:#789;margin-top:4px">76% acquisition target progress</div>
+</div>
+
+<div class="head"><h2>🏪 Partner Visibility</h2><span>FREE DISCOVERY</span></div>
+<div class="camp">
+<div class="campTop"><h3>Nearby Partner Posts</h3><span class="status">RULE ACTIVE</span></div>
+<p style="font-size:8px;color:#789;margin-top:5px">Only relevant nearby partner posts appear through the navigation experience.</p>
+<div class="target"><span class="chip">📍 20m proximity</span><span class="chip">🗺️ Route based</span><span class="chip">👥 PICNIKO users</span></div>
+</div>
+
+<div class="head"><h2>📣 Meta / Google Ready</h2><span>FUTURE</span></div>
+<div class="camp">
+<div class="campTop"><h3>Multi-Partner Brand Campaign</h3><span class="status">READY</span></div>
+<p style="font-size:8px;color:#789;margin-top:5px">One PICNIKO brand campaign can drive people toward the ecosystem, while partner offers are surfaced inside the app based on relevance.</p>
+<div class="target"><span class="chip">💧 Mulshi Fresh</span><span class="chip">📱 App installs</span><span class="chip">🏪 Partner discovery</span><span class="chip">🗺️ Navigation</span></div>
+<button class="btn dark" style="width:100%;margin-top:10px" onclick="showPage('plotting')">OPEN PLOTTING ADS</button>
+</div>
+
+<div class="head"><h2>📈 Partner Performance</h2><span>DEMO</span></div>
+<div class="camp">
+<div class="campTop"><h3>Green Valley Resort</h3><span class="status">PARTNER</span></div>
+<div class="campGrid"><div class="mini"><b>8,420</b><span>VIEWS</span></div><div class="mini"><b>1,240</b><span>NAVIGATE</span></div><div class="mini"><b>486</b><span>CLAIMS</span></div></div>
+</div>
+</div>
+</div>
+
+
+<!-- PLOTTING PAID ADS -->
+<div class="page" id="plotting">
+<div class="mkHero" style="background:linear-gradient(135deg,#725100,#ffb51b)">
+<div style="font-size:8px;opacity:.8">PICNIKO PAID ADVERTISING</div>
+<h1>🏡 Plotting Ads</h1>
+<p>Only plotting projects are available in this paid advertising category. Radius and campaign performance are managed separately from normal partners.</p>
+<button class="btn white" style="margin-top:12px" onclick="createPlotCampaign()">+ CREATE PLOTTING CAMPAIGN</button>
+</div>
+<div class="section">
+<div class="head"><h2>📊 Campaign Performance</h2><span>PAID</span></div>
+<div class="card">
+<div class="grid2">
+<div class="adMetric"><b>24.8K</b><span>REACH</span></div><div class="adMetric"><b>3.6K</b><span>VIEWS</span></div>
+<div class="adMetric"><b>386</b><span>ENQUIRIES</span></div><div class="adMetric"><b>94</b><span>NAVIGATIONS</span></div>
+</div>
+</div>
+<div class="head"><h2>🏡 Active Plotting Campaign</h2><span>LIVE</span></div>
+<div class="camp">
+<div class="campTop"><h3>Mulshi Nature Plots</h3><span class="status" style="background:#fff1c8;color:#8a6100">PAID ACTIVE</span></div>
+<p style="font-size:8px;color:#789;margin-top:5px">Target radius: <b id="plotRadius">5 KM</b> • Featured in relevant PICNIKO discovery surfaces.</p>
+<div class="bar"><i style="width:68%;background:#ffb51b"></i></div>
+<div style="font-size:7px;color:#789;margin-top:4px">68% campaign delivery</div>
+</div>
+<div class="head"><h2>⚡ Display Logic</h2><span>IMPORTANT</span></div>
+<div class="card">
+<p style="font-size:8px;line-height:1.6;color:#789">
+🏪 Normal Partner: <b>20m rule</b><br>
+🏡 Plotting Ad: <b>independent paid radius</b><br>
+⚡ If both are eligible: <b>both display simultaneously</b>
+</p>
+</div>
+</div>
+</div>
+
+<!-- SCANNER -->
+<div class="page" id="scanner">
+<div class="scanbox">
+<h2 style="font-size:20px">📷 Mulshi Fresh Scanner</h2>
+<p>Scan only a genuine Mulshi Fresh bottle QR.</p>
+<div class="scanner"><div class="scanline"></div><div class="scanicon">▦</div></div>
+<button class="btn white" onclick="scanBottle()">📷 START CAMERA SCAN</button>
+<p style="margin-top:14px">🔐 One valid bottle ID = one bottle reward</p>
+</div>
+<div class="section">
+<div class="card" style="border:2px dashed #00a878;background:#f2fbf7">
+<h3 style="font-size:15px">🧪 10-BOTTLE DEMO TEST</h3>
+<p style="font-size:8px;color:#789;margin-top:5px;line-height:1.6">Demo mode: प्रत्येक test bottle एक unique QR token आहे. 10 genuine scans = +100 ⭐. Same bottle पुन्हा scan केल्यास reward मिळणार नाही.</p>
+<div id="demoBottleGrid" style="display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-top:10px"></div>
+<div class="row" style="margin-top:9px">
+<button class="btn green" onclick="runAll10DemoScans()">⚡ SCAN ALL 10</button>
+<button class="btn dark" onclick="reset10Demo()">↻ RESET TEST</button>
+</div>
+<div id="demoTestStatus" style="font-size:8px;color:#789;margin-top:8px;text-align:center">Ready — 0 / 10 scanned • 0 ⭐</div>
+</div>
+</div>
+<div class="section"><div class="card"><h3 style="font-size:14px">⭐ Reward rule</h3><p style="font-size:8px;color:var(--muted);line-height:1.6;margin-top:6px">Rewards are generated from verified bottle scans only. Likes, reels, friends, navigation and ordinary app sharing do not generate bottle rewards.</p></div></div>
+</div>
+
+<!-- REWARDS -->
+<div class="page" id="rewards">
+<div class="section">
+<div class="head"><h2>🎁 Bottle Scan Rewards</h2><span id="rp">1850 ⭐</span></div>
+<div class="card"><div class="grid2"><div class="metric"><b id="bottles">27</b><span>VALID BOTTLES</span></div><div class="metric"><b id="scanpoints">270</b><span>SCAN POINTS</span></div></div></div>
+<div class="card business"><div style="font-size:30px">💧</div><div class="info"><h3>Free Mulshi Fresh Bottle</h3><p>500 Points</p><button class="btn green" onclick="claimReward('Free Mulshi Fresh Bottle',500)">CLAIM</button></div></div>
+<div class="card business"><div style="font-size:30px">🎟️</div><div class="info"><h3>₹100 Picnic Coupon</h3><p>800 Points</p><button class="btn green" onclick="claimReward('₹100 Picnic Coupon',800)">CLAIM</button></div></div>
+</div>
+</div>
+
+<!-- QUALITY -->
+<div class="page" id="quality">
+<div class="section">
+<div class="head"><h2>🔬 Daily Water Test</h2><span>TRANSPARENCY</span></div>
+<div class="card">
+<div class="qualitytop"><div><h3 style="font-size:15px">💧 Mulshi Fresh</h3><p style="font-size:8px;color:var(--muted);margin-top:4px">Batch MF-310826-A • 31 Aug 2026</p></div><div class="pass">✓ PASSED</div></div>
+<div class="report">pH: <b>Actual report value</b><br>TDS: <b>Actual report value</b><br>Microbiological: <b>PASS / actual result</b><br>Report ID: <b>MF-QC-XXXX</b></div>
+<button class="btn dark" style="width:100%;margin-top:10px" onclick="toast('🔬 Full report viewer opened')">VIEW FULL REPORT</button>
+</div>
+<div class="card delivery">
+<div class="line"><div class="di">🏭</div><div class="info"><b>Production batch</b><span>MF-310826-A</span></div><div class="ok">✓</div></div>
+<div class="line"><div class="di">🔬</div><div class="info"><b>Lab verification</b><span>Actual document to be linked</span></div><div class="ok">✓</div></div>
+<div class="line"><div class="di">📦</div><div class="info"><b>Distribution</b><span>Batch-linked dispatch</span></div><div class="ok">✓</div></div>
+</div>
+</div>
+</div>
+
+<!-- REELS -->
+<div class="page" id="reels">
+<div class="section"><div class="head"><h2>🎬 PICNIKO Reels</h2><span>COMMUNITY</span></div>
+<div class="reel r1"><div class="reeltxt"><h3>🌄 Nature Morning</h3><p>@priya • Lonavala</p></div><div class="reelact"><div>❤️<small>1.2K</small></div><div>💬<small>86</small></div><div>↗️<small>Share</small></div></div></div>
+<div class="reel r2"><div class="reeltxt"><h3>🏕️ Responsible Travel</h3><p>@rohan • Pawna</p></div><div class="reelact"><div>❤️<small>2.4K</small></div><div>💬<small>142</small></div><div>↗️<small>Share</small></div></div></div>
+</div>
+</div>
+
+<!-- FRIENDS -->
+<div class="page" id="friends">
+<div class="section"><div class="head"><h2>👥 Friends</h2><span>COMMUNITY</span></div>
+<div class="card business"><div class="avatar">A</div><div class="info"><h3>Akash Patil</h3><p>12 mutual friends</p></div><button class="btn green" onclick="toast('👥 Friend added')">ADD</button></div>
+<div class="card business"><div class="avatar">P</div><div class="info"><h3>Priya Sharma</h3><p>8 mutual friends</p></div><button class="btn green" onclick="toast('👥 Friend added')">ADD</button></div>
+</div>
+</div>
+
+<!-- PODCAST -->
+<div class="page" id="podcast">
+<div class="podcast"><h1>🎙️ PICNIKO Voices</h1><p>Podcast invitations are based on meaningful community contribution and high verified bottle engagement—not on likes alone.</p></div>
+<div class="section"><div class="grid2">
+<div class="topic"><b>🌳</b><span>Save Trees</span></div><div class="topic"><b>💧</b><span>Save Water</span></div>
+<div class="topic"><b>🌦️</b><span>Weather Awareness</span></div><div class="topic"><b>🧹</b><span>Cleanliness</span></div>
+<div class="topic"><b>♻️</b><span>Waste Management</span></div><div class="topic"><b>🏕️</b><span>Responsible Travel</span></div>
+</div></div>
+</div>
+
+<!-- PROFILE -->
+<div class="page" id="profile">
+<div class="section">
+<div class="card" style="text-align:center;padding:25px"><div class="avatar" style="margin:auto;width:82px;height:82px;font-size:22px">SS</div><h2 style="margin-top:12px">Shivaji Sathe</h2><p style="font-size:8px;color:var(--muted);margin-top:4px">@shivaji • Pune</p></div>
+<div class="card"><h3 style="font-size:15px">💧 My Mulshi Fresh Journey</h3><div class="grid2" style="margin-top:11px"><div class="metric"><b id="pb">27</b><span>VERIFIED BOTTLES</span></div><div class="metric"><b id="pps">270</b><span>SCAN POINTS</span></div></div></div>
+</div>
+</div>
+
+<!-- ADMIN -->
+<div class="page" id="admin">
+<div class="section">
+<div class="card" style="background:linear-gradient(135deg,#063d37,#009d75);color:#fff"><h2 style="font-size:20px">📊 Mulshi Fresh Control Center</h2><p style="font-size:8px;opacity:.8;margin-top:5px">Production • QR • Rewards • Customers • Distribution</p><div class="grid2" style="margin-top:14px"><div class="metric" style="background:#ffffff15"><b>12,500</b><span>PRODUCTION</span></div><div class="metric" style="background:#ffffff15"><b>8,400</b><span>DISPATCHED</span></div><div class="metric" style="background:#ffffff15"><b>620</b><span>SCANS</span></div><div class="metric" style="background:#ffffff15"><b>310</b><span>NEW USERS</span></div></div></div>
+<div class="card"><h3 style="font-size:15px">🔐 QR Traceability</h3><p style="font-size:8px;color:var(--muted);line-height:1.6;margin-top:6px">Production version should connect Bottle ID → Batch → Distribution → First Scan → Customer → Reward status.</p><button class="btn dark" style="width:100%;margin-top:10px" onclick="toast('🔐 Traceability module opened')">OPEN TRACEABILITY</button></div>
+</div>
+</div>
+
+<!-- NAV -->
+<div class="page" id="activity">
+<div class="section"><div class="head"><h2>⚡ Activity</h2><span>LIVE</span></div>
+<div class="card"><h3 style="font-size:13px">Your Activity</h3><p style="font-size:9px;color:#789;margin-top:6px">तुमच्या posts, reels, visits, challenges आणि campaign activities येथे एकत्र दिसतील.</p></div>
+<div class="card"><b style="font-size:11px">🌿 Nature Challenge</b><p style="font-size:8px;color:#789;margin-top:5px">Weekend activity • 1.8K participants</p><button class="btn green" style="margin-top:9px" onclick="openComposer('activity')">JOIN / CREATE ACTIVITY</button></div>
+</div></div>
+<div class="page" id="messages">
+<div class="section"><div class="head"><h2>💬 Messages</h2><span>INBOX</span></div>
+<div class="card business"><div class="avatar">A</div><div class="info"><h3>Akash</h3><p>Weekend plan • 2 new messages</p></div><button class="btn green" onclick="toast('💬 Chat opened')">OPEN</button></div>
+<div class="card business"><div class="avatar">👥</div><div class="info"><h3>Mulshi Travellers Group</h3><p>8 new messages</p></div><button class="btn green" onclick="showPage('groups')">GROUP</button></div>
+</div></div>
+<div class="page" id="news">
+<div class="section"><div class="head"><h2>📰 News & Updates</h2><span>FOR YOU</span></div>
+<div class="card"><h3 style="font-size:13px">PICNIKO Updates</h3><p style="font-size:9px;color:#789;margin-top:6px">Local events, useful information, verified partner updates आणि community news.</p></div>
+<div class="card"><h3 style="font-size:13px">🌿 Weekend Nature Update</h3><p style="font-size:9px;color:#789;margin-top:6px">तुमच्या निवडलेल्या location नुसार relevant updates येथे दिसतील.</p></div>
+</div></div>
+<div class="page" id="groups">
+<div class="section"><div class="head"><h2>👥 Groups</h2><span>YOUR CIRCLE</span></div>
+<div class="card business"><div class="avatar">🌄</div><div class="info"><h3>Mulshi Travellers</h3><p>1.2K members • 18 active now</p></div><button class="btn green" onclick="toast('👥 Group opened')">OPEN</button></div>
+<div class="card business"><div class="avatar">💧</div><div class="info"><h3>Mulshi Fresh Community</h3><p>Verified bottle community</p></div><button class="btn green" onclick="toast('👥 Group opened')">OPEN</button></div>
+</div></div>
+
+<div class="bottom">
+<div class="nav active" onclick="showPage('home',this)">🏠<span>Home</span></div>
+<div class="nav" onclick="showPage('navigation',this)">🗺️<span>Navigate</span></div>
+<div class="nav" onclick="showPage('market',this)">🏪<span>Partners</span></div>
+<div class="nav" onclick="showPage('marketing',this)">📢<span>Marketing</span></div>
+<div class="nav" onclick="showPage('scanner',this)">📷<span>Scan</span></div>
+<div class="nav" onclick="showPage('profile',this)">👤<span>Profile</span></div>
+</div>
+
+
+<div class="modal" id="authModal"><div class="modalbox">
+<button class="close" onclick="closeAuth()">×</button>
+<h2>🔐 PICNIKO Login</h2>
+<p id="authStatus" style="font-size:9px;color:#789;margin-top:7px">Login to sync rewards with Supabase.</p>
+<input class="input" id="authEmail" type="email" placeholder="Email">
+<input class="input" id="authPassword" type="password" placeholder="Password">
+<input class="input" id="authName" placeholder="Full Name (new account)">
+<button class="full" onclick="loginUser()">LOGIN</button>
+<button class="full" style="background:#063d37" onclick="signupUser()">CREATE ACCOUNT</button>
+<button class="full" style="background:#edf8f5;color:#087e63" onclick="logoutUser()">LOGOUT</button>
+</div></div>
+<div class="modal" id="qrModal"><div class="modalbox">
+<button class="close" onclick="stopQrScanner()">×</button>
+<h2>📷 Scan Mulshi Fresh QR</h2>
+<p style="font-size:9px;color:#789;margin-top:7px">Allow camera access and scan the QR printed on the bottle.</p>
+<div id="qr-reader" style="width:100%;margin-top:15px"></div>
+<p id="qrStatus" style="font-size:9px;color:#789;margin-top:10px;text-align:center">Camera unavailable? Use Manual Test below.</p>
+<div style="margin-top:14px;border-top:1px solid #e7eeec;padding-top:14px">
+  <div style="font-size:10px;font-weight:800;color:#123f39;margin-bottom:7px">🧪 PC TEST — ENTER QR TOKEN</div>
+  <input class="input" id="manualQrToken" placeholder="Paste bottle QR token here" style="width:100%">
+  <button class="full" onclick="manualBottleScan()">VERIFY BOTTLE</button>
+</div>
+</div></div>
+
+<div class="modal" id="modal"><div class="modalbox"><button class="close" onclick="closeModal()">×</button><h2>🎁 Claim Reward</h2><p id="desc" style="font-size:9px;color:#789;margin-top:7px"></p><input class="input" id="name" placeholder="Your Name"><input class="input" id="mobile" placeholder="Mobile Number"><button class="full" onclick="confirmReward()">CLAIM REWARD</button></div></div>
+<div class="toast" id="toast"></div>
+
+</div>
+
+<script>
+/* PICNIKO SUPABASE CONNECTION
+   Replace the two values below with your Supabase project's
+   public URL and anon key. NEVER use the service_role key here. */
+const SUPABASE_URL = "https://lydclpmoqprhjnzfaygr.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_KQXi43DY5IBONyjuJ8Oqvg_vrjC4FuX";
+let sb = null;
+if (window.supabase && SUPABASE_URL.startsWith("http") && !SUPABASE_URL.includes("YOUR_")) {
+  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+}
+
+let points=0,bottles=0,scanpoints=0,selected=null,qrScanner=null;
+
+function showPage(id,el){
+  const v3=document.getElementById('picnikoV3');
+  const p=document.getElementById(id);
+
+  // PICNIKO V3 is the visible Home UI and lives outside the legacy .page container.
+  // Keep the existing app pages intact; only toggle the Home layer when Home is selected.
+  if(id==='home'){
+    document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+    if(v3) v3.style.display='block';
+  }else{
+    if(!p){toast('Page available नाही: '+id);return;}
+    if(v3) v3.style.display='none';
+    document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+    p.classList.add('active');
+  }
+
+  document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));
+  if(el && el.classList.contains('nav')) el.classList.add('active');
+  else {
+    const n=[...document.querySelectorAll('.nav')].find(x=>(x.getAttribute('onclick')||'').includes("showPage('"+id+"'"));
+    if(n)n.classList.add('active');
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toast(msg){
+  const t=document.getElementById('toast');t.innerText=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2400);
+}
+function update(){
+  const pointsText=points.toLocaleString();
+  const pointsEl=document.getElementById('points');
+  const rewardPointsEl=document.getElementById('rp');
+  const bottlesEl=document.getElementById('bottles');
+  const scanpointsEl=document.getElementById('scanpoints');
+  const profileBottlesEl=document.getElementById('pb');
+  const profileScanpointsEl=document.getElementById('pps');
+  const progressEl=document.getElementById('progress');
+  if(pointsEl)pointsEl.innerText=pointsText;
+  if(rewardPointsEl)rewardPointsEl.innerText=pointsText+' ⭐';
+  if(bottlesEl)bottlesEl.innerText=bottles;
+  if(scanpointsEl)scanpointsEl.innerText=scanpoints;
+  if(profileBottlesEl)profileBottlesEl.innerText=bottles;
+  if(profileScanpointsEl)profileScanpointsEl.innerText=scanpoints;
+  const progressWidth=Math.min(points/2000*100,100)+'%';
+  if(progressEl)progressEl.style.width=progressWidth;
+}
+function openAuth(){document.getElementById('authModal').style.display='flex'}
+function closeAuth(){document.getElementById('authModal').style.display='none'}
+
+async function loginUser(){
+  if(!sb){toast('⚠️ Configure Supabase first');return}
+  const email=document.getElementById('authEmail').value.trim();
+  const password=document.getElementById('authPassword').value;
+  if(!email||!password){toast('Enter email and password');return}
+  const {error}=await sb.auth.signInWithPassword({email,password});
+  if(error){document.getElementById('authStatus').innerText=error.message;return}
+  closeAuth(); toast('✅ Login successful'); await loadUser();
+}
+async function signupUser(){
+  if(!sb){toast('⚠️ Configure Supabase first');return}
+  const email=document.getElementById('authEmail').value.trim();
+  const password=document.getElementById('authPassword').value;
+  const name=document.getElementById('authName').value.trim()||'PICNIKO Customer';
+  if(!email||!password){toast('Enter email and password');return}
+  const {data,error}=await sb.auth.signUp({email,password});
+  if(error){document.getElementById('authStatus').innerText=error.message;return}
+  if(data.user) await sb.from('profiles').upsert({id:data.user.id,full_name:name,role:'customer',reward_points:0,is_active:true});
+  toast(data.session?'✅ Account created':'📧 Check your email to confirm');
+  if(data.session){closeAuth();await loadUser();}
+}
+async function logoutUser(){
+  if(sb) await sb.auth.signOut();
+  points=0;bottles=0;scanpoints=0;update();
+  document.getElementById('authBtn').innerText='LOGIN';
+  document.getElementById('avatar').innerText='SS';
+  closeAuth();toast('Logged out');
+}
+async function loadUser(){
+  if(!sb)return;
+  const {data:{user}}=await sb.auth.getUser();
+  if(!user){document.getElementById('authBtn').innerText='LOGIN';return}
+  const {data:p}=await sb.from('profiles').select('full_name,reward_points').eq('id',user.id).maybeSingle();
+  points=p?.reward_points??0;
+  document.getElementById('authBtn').innerText='ACCOUNT';
+  document.getElementById('avatar').innerText=(p?.full_name||user.email||'P').trim().slice(0,2).toUpperCase();
+  const {data:scans}=await sb.from('bottle_scans').select('reward_points').eq('user_id',user.id).eq('scan_status','verified');
+  bottles=scans?.length||0;
+  scanpoints=(scans||[]).reduce((s,x)=>s+(x.reward_points||0),0);
+  update();
+}
+
+async function scanBottle(){
+  if(!sb){toast('⚠️ Configure Supabase first');return}
+  const {data:{user}}=await sb.auth.getUser();
+  if(!user){toast('🔐 Please login first');openAuth();return}
+  document.getElementById('qrModal').style.display='flex';
+  document.getElementById('qrStatus').innerText='Starting camera...';
+  if(qrScanner)return;
+  qrScanner=new Html5Qrcode("qr-reader");
+  try{
+    await qrScanner.start({facingMode:"environment"},{fps:10,qrbox:{width:230,height:230}},
+      async decodedText=>{await processBottleQr(decodedText)},()=>{});
+    document.getElementById('qrStatus').innerText='Point camera at the bottle QR';
+  }catch(e){
+    document.getElementById('qrStatus').innerText='Camera error: '+e.message;
+    qrScanner=null;
+  }
+}
+async function manualBottleScan(){
+  const token=document.getElementById('manualQrToken').value.trim();
+  if(!token){toast('Enter the bottle QR token');return}
+  await processBottleQr(token);
+}
+
+async function processBottleQr(qrToken){
+  document.getElementById('qrStatus').innerText='🔐 Verifying bottle...';
+  try{await qrScanner.stop()}catch(e){}
+  qrScanner=null;
+  const {data,error}=await sb.rpc('scan_bottle',{p_qr_token:qrToken,p_latitude:null,p_longitude:null});
+  document.getElementById('qrModal').style.display='none';
+  if(error){toast('❌ Scan failed');alert('PICNIKO SCAN ERROR\n\n'+error.message);return}
+  if(data?.success){
+    toast('🎉 Bottle verified • Reward added');
+    const bs=document.getElementById('backendStatus'); if(bs) bs.innerText='● Reward Engine Active';
+    alert('✓ MULSHI FRESH VERIFIED\n\nBottle ID: '+data.bottle_id+'\n\n⭐ +'+data.reward_points+' reward added\n\n🔐 Server-side duplicate protection active.');
+  }else if(data?.duplicate){
+    toast('🚫 Duplicate bottle — no reward');
+    const bs=document.getElementById('backendStatus'); if(bs) bs.innerText='● Duplicate Protection Active';
+    alert('🚫 DUPLICATE BOTTLE\n\nThis bottle has already received its reward.\n\nNo additional points were added.');
+  }else{
+    toast('❌ '+(data?.message||'Verification failed'));
+    alert('❌ SCAN NOT VERIFIED\n\n'+(data?.message||'Unknown result'));
+  }
+  await loadUser();
+}
+async function stopQrScanner(){
+  if(qrScanner){try{await qrScanner.stop()}catch(e){}qrScanner=null}
+  document.getElementById('qrModal').style.display='none';
+}
+
+function setRadius(btn,km){
+  document.querySelectorAll('.radius button').forEach(x=>x.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('plotRadius').innerText=km+' KM';
+  document.getElementById('plotReach').innerText=km===1?'8.4K':km===5?'24.8K':km===10?'41.2K':'68.7K';
+  toast('🏡 Plotting ad radius: '+km+' KM');
+}
+function createPlotCampaign(){const name=prompt('Plotting campaign name','Mulshi Nature Plots');if(name)alert('🏡 PLOTTING CAMPAIGN CREATED\n\n'+name)}
+function createCampaign(){const name=prompt('Campaign name','Mulshi Fresh • PICNIKO Growth');if(name)alert('📢 CAMPAIGN CREATED\n\n'+name)}
+function claimReward(name,cost){
+  if(points<cost){toast('❌ Not enough points');return}
+  selected={name,cost};document.getElementById('desc').innerText=name+' requires '+cost+' points.';
+  document.getElementById('modal').style.display='flex';
+}
+function confirmReward(){
+  const n=document.getElementById('name').value,m=document.getElementById('mobile').value;
+  if(!n||!m){toast('Please enter your details');return}
+  points-=selected.cost;update();document.getElementById('modal').style.display='none';
+  alert('🎉 REWARD CLAIM REQUEST\n\n'+selected.name+'\n\n⭐ Points used: '+selected.cost);
+  selected=null;
+}
+function closeModal(){document.getElementById('modal').style.display='none'}
+function startNav(){
+  toast('🚗 LIVE NAVIGATION STARTED');
+  if(navigator.geolocation)navigator.geolocation.getCurrentPosition(
+    ()=>document.getElementById('gps').innerText='🟢 LIVE GPS',
+    ()=>document.getElementById('gps').innerText='GPS PERMISSION');
+  setTimeout(()=>toast('📢 Nearby partner detected'),3000);
+}
+function partnerGo(){toast('🗺️ Route updated to partner')}
+let demoDistance=25;
+function simulatePartner(){
+  demoDistance=demoDistance===25?15:25;
+  document.getElementById('distance').innerText=demoDistance+'m';
+  document.getElementById('partnerPost').style.display=demoDistance>=20?'block':'none';
+  toast(demoDistance>=20?'📢 Partner post visible':'📍 Partner post hidden below proximity threshold');
+}
+
+update();
+if(sb){
+  sb.auth.onAuthStateChange((event)=>{if(event==='SIGNED_IN'||event==='TOKEN_REFRESHED')loadUser()});
+  loadUser();
+}
+</script>
+
+<script>
+/* 10-BOTTLE CONTINUOUS DEMO IDs: MF-0001 ... MF-0010 */
+const demoBottleCodes = Array.from({length:10},(_,i)=>`MF-${String(i+1).padStart(4,'0')}`);
+const demoScanned = new Set();
+function render10Demo(){
+  const grid=document.getElementById('demoBottleGrid'); if(!grid)return;
+  grid.innerHTML=demoBottleCodes.map((code,i)=>`
+    <button class="card" style="text-align:left;padding:10px;cursor:pointer;border:1px solid #dcece7;background:#fff" onclick="demoVerifyBottle('${code}')">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <b style="font-size:11px">Bottle ${i+1}</b>
+        <span id="demoState${i}" style="font-size:7px;color:#789">READY</span>
+      </div>
+      <div style="font-family:monospace;font-size:10px;margin-top:6px;color:#063d37">${code}</div>
+      <div style="font-size:7px;color:#789;margin-top:4px">+10 ⭐ • unique bottle ID</div>
+    </button>`).join('');
+}
+function demoVerifyBottle(code){
+  const i=demoBottleCodes.indexOf(code);
+  if(demoScanned.has(code)){ toast('🚫 '+code+' already scanned — no reward'); return; }
+  demoScanned.add(code);
+  bottles++; points+=10; scanpoints+=10; update();
+  const st=document.getElementById('demoState'+i); if(st){st.innerText='✓ VERIFIED';st.style.color='#00895f';}
+  const done=demoScanned.size;
+  const ds=document.getElementById('demoTestStatus'); if(ds) ds.innerText=`${done} / 10 scanned • ${done*10} ⭐`;
+  toast(`✅ ${code} verified • +10 ⭐`);
+}
+function runAll10DemoScans(){
+  demoBottleCodes.forEach(code=>{if(!demoScanned.has(code))demoVerifyBottle(code)});
+  const ds=document.getElementById('demoTestStatus'); if(ds) ds.innerText=`10 / 10 scanned • 100 ⭐`;
+  toast('🎉 All 10 bottles verified');
+}
+function reset10Demo(){
+  demoScanned.clear(); points=0;bottles=0;scanpoints=0;update();render10Demo();
+  const ds=document.getElementById('demoTestStatus'); if(ds) ds.innerText='Ready — 0 / 10 scanned • 0 ⭐';
+  toast('↻ 10-bottle demo reset');
+}
+render10Demo();
+</script>
+
+
+<style>
+/* 10U-2 FINAL HOME REFINEMENT */
+.p3search{cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px}.p3search span{font-size:7px;color:#00a878;font-weight:900;white-space:nowrap}.p3searchMain{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.p3top,#picnikoV3{width:100%;max-width:430px;margin-left:auto;margin-right:auto}
+.p3storiesWrap{padding-bottom:0}.p3tabs{display:none!important}
+.p3quickMedia{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:6px 12px 2px;background:#f6faf8}
+.p3quickMedia button{border:1px solid #dfeae6;background:#fff;border-radius:13px;padding:9px 3px 8px;font-size:17px;color:#063d37;box-shadow:0 3px 10px #063d3708}
+.p3quickMedia span{display:block;font-size:7px;font-weight:900;margin-top:4px;color:#48635d;line-height:1.1}
+.p3createMain{display:flex;align-items:center;justify-content:center;gap:4px;width:calc(100% - 24px);margin:7px 12px 3px;border:0;border-radius:14px;background:#00a878;color:#fff;padding:11px;font-size:10px;font-weight:900;box-shadow:0 6px 15px #00a87824}.p3createMain span{font-size:15px;line-height:1}
+.p3ecosystem{display:grid;grid-template-columns:auto 1fr;gap:10px;margin:9px 12px 2px;padding:12px;border:1px solid #cfe9df;border-radius:17px;background:linear-gradient(135deg,#effbf6,#fff);box-shadow:0 5px 14px #063d3708}.p3ecosystemIcon{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;background:#d8f5e9;font-size:21px}.p3ecosystemCopy{min-width:0}.p3ecosystemTag{font-size:6px;color:#008b68;font-weight:900;letter-spacing:.4px}.p3ecosystem h2{font-size:13px;color:#063d37;margin-top:3px}.p3ecosystem p{font-size:8px;color:#617b74;line-height:1.4;margin-top:3px}.p3ecosystemActions{grid-column:1 / -1;display:grid;grid-template-columns:1fr 1fr;gap:6px}.p3ecosystemActions button{border:0;border-radius:10px;padding:9px 5px;font-size:8px;font-weight:900}.p3ecosystemActions button:first-child{background:#063d37;color:#fff}.p3ecosystemActions button:last-child{background:#dff5ec;color:#08795e}
+@media (min-width:700px){#picnikoV3{max-width:960px}.p3top{max-width:960px;padding:14px 24px 12px}.p3stories{max-width:960px;margin:0 auto;padding-left:24px;padding-right:24px}.p3quickMedia{max-width:960px;margin:0 auto;padding-left:24px;padding-right:24px}.p3createMain,.p3ecosystem{max-width:912px}.p3section,.p3note{max-width:960px;margin-left:auto;margin-right:auto}}
+.p3influenceMini{margin-top:7px!important;margin-bottom:7px!important;background:#eef9f5;border:1px solid #d9eee6;border-radius:16px;padding:10px 12px!important}.p3influenceMini .p3head{margin-bottom:4px}.p3influenceMini p{font-size:8px;color:#617b74;line-height:1.4}
+.p3section{margin:8px 0}.p3note{padding-top:2px}
+.p3modal{display:none;position:fixed;inset:0;background:#0009;z-index:3000;align-items:flex-end}.p3modalbox{width:100%;max-width:600px;margin:auto;background:#fff;border-radius:25px 25px 0 0;padding:18px}.p3modalHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.p3modalHead h3{font-size:16px;color:#063d37}.p3close{border:0;background:#eef7f4;border-radius:10px;width:32px;height:32px;font-size:18px}.p3createGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.p3createGrid button{border:1px solid #dceae5;background:#f7fbf9;border-radius:16px;padding:15px 5px;font-size:21px;font-weight:900;color:#063d37}.p3createGrid span{display:block;font-size:8px;margin-top:6px}.p3locInput{width:100%;padding:13px;border:1px solid #dce9e5;border-radius:13px;font-size:11px;outline:none}.p3locBtns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}.p3locBtns button{border:0;border-radius:12px;padding:11px;font-size:9px;font-weight:900}.p3darkBtn{background:#063d37;color:#fff}.p3lightBtn{background:#e3f5ef;color:#087b60}
+/* Navigation: SOS always visible in one corner */
+.navSOS{position:absolute;right:14px;top:12px;width:50px;height:50px;border-radius:50%;border:3px solid #fff;background:#d92323;color:#fff;font-size:10px;font-weight:1000;box-shadow:0 6px 18px #0005;z-index:80}
+.navigationWrap{position:relative}.navPlaceBar{position:absolute;top:12px;left:12px;right:72px;z-index:70;background:#fffffff2;border:1px solid #dceae6;border-radius:14px;padding:11px;font-size:9px;font-weight:800;color:#31574f}
+</style>
+
+<div class="p3modal" id="composer">
+  <div class="p3modalbox">
+    <div class="p3modalHead"><h3 id="composerTitle">Create</h3><button class="p3close" onclick="closeComposer()">×</button></div>
+    <div id="composerBody">
+      <input class="p3locInput" id="composerText" placeholder="तुम्हाला काय share करायचे आहे?">
+      <input class="p3locInput" id="composerMedia" style="margin-top:8px" placeholder="Photo / Video link (optional)">
+      <button class="full" onclick="publishComposer()">PUBLISH</button>
+    </div>
+  </div>
+</div>
+
+<div class="p3modal" id="createMenu"><div class="p3modalbox">
+  <div class="p3modalHead"><h3>＋ Create something</h3><button class="p3close" onclick="closeCreateMenu()">×</button></div>
+  <div class="p3createGrid">
+    <button onclick="closeCreateMenu();openComposer('post')">📝<span>Post</span></button>
+    <button onclick="closeCreateMenu();openComposer('reel')">🎬<span>Reel / Short</span></button>
+    <button onclick="closeCreateMenu();openComposer('activity')">⚡<span>Activity</span></button>
+  </div>
+</div></div>
+
+<div class="p3modal" id="placeSearch"><div class="p3modalbox">
+  <div class="p3modalHead"><h3>📍 Find a place</h3><button class="p3close" onclick="closePlaceSearch()">×</button></div>
+  <input class="p3locInput" id="placeQuery" placeholder="Place, location, hotel, restaurant, event…">
+  <div class="p3locBtns"><button class="p3darkBtn" onclick="searchWithMaps()">🗺️ Google Maps</button><button class="p3lightBtn" onclick="searchWithAI()">✨ Ask AI</button></div>
+</div></div>
+
+<script>
+function openComposer(type){
+ const m=document.getElementById('composer'); const title=document.getElementById('composerTitle'); const text=document.getElementById('composerText'); const media=document.getElementById('composerMedia');
+ if(type==='post'){title.innerText='📝 Create Post';text.placeholder='Post मध्ये काय सांगायचे आहे?';media.placeholder='Photo link (optional)';}
+ if(type==='reel'){title.innerText='🎬 Create Reel / Short';text.placeholder='Reel / Short caption';media.placeholder='Video link (required for prototype)';}
+ if(type==='activity'){title.innerText='⚡ Create Activity';text.placeholder='Activity / event / challenge काय आहे?';media.placeholder='Location or media link (optional)';}
+ m.dataset.type=type;m.style.display='flex';setTimeout(()=>text.focus(),80);
+}
+function closeComposer(){document.getElementById('composer').style.display='none'}
+function publishComposer(){const m=document.getElementById('composer');const type=m.dataset.type||'post';const t=document.getElementById('composerText').value.trim();if(!t){toast('✍️ काहीतरी लिहा');return}closeComposer();toast((type==='reel'?'🎬 Reel / Short':type==='activity'?'⚡ Activity':'📝 Post')+' created successfully');}
+
+function openCreateMenu(){document.getElementById('createMenu').style.display='flex'}
+function closeCreateMenu(){document.getElementById('createMenu').style.display='none'}
+function openPlaceSearch(){document.getElementById('placeSearch').style.display='flex';setTimeout(()=>document.getElementById('placeQuery').focus(),100)}
+function closePlaceSearch(){document.getElementById('placeSearch').style.display='none'}
+function searchWithMaps(){const q=document.getElementById('placeQuery').value.trim();if(!q){toast('📍 Place लिहा');return} closePlaceSearch(); window.open('https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q),'_blank')}
+function searchWithAI(){const q=document.getElementById('placeQuery').value.trim();if(!q){toast('✨ काय शोधायचे ते लिहा');return} closePlaceSearch(); toast('✨ AI place discovery: '+q)}
+</script>
+
+<script>
+/* Restore/upgrade Navigation without changing existing navigation engine */
+(function(){
+ const nav=document.getElementById('navigation');
+ if(nav && !nav.querySelector('.navSOS')){
+   const first=nav.querySelector('.section');
+   if(first){ first.classList.add('navigationWrap'); first.insertAdjacentHTML('afterbegin',`<button class="navSOS" onclick="toast('🆘 SOS activated — emergency action')">SOS</button><div class="navPlaceBar">📍 Search destination / place • Google Maps + AI</div>`); }
+ }
+})();
+</script>
+
+</body>
+</html>

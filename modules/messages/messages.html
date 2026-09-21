@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+
+<html lang="mr">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+<title>PICNIKO — Messages</title>
+<link href="../../css/core.css" rel="stylesheet"/>
+<link href="../../css/reels.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../../js/config.js"></script>
+<style>
+:root{--msg-bg:#f5f6fa;--msg-card:#fff;--msg-ink:#171b2b;--msg-muted:#7b8192;--msg-line:#e7e8ef;--msg-purple:#6337e8;--msg-soft:#eee9ff}
+*{box-sizing:border-box}.messages-app{min-height:100vh;background:var(--msg-bg);color:var(--msg-ink)}
+.msg-top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--msg-line)}
+.msg-topin{max-width:900px;margin:auto;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}.msg-title{font-size:23px;font-weight:850}.msg-sub{font-size:12px;color:var(--msg-muted);margin-top:2px}.msg-top-actions{display:flex;gap:8px}.msg-icon{width:40px;height:40px;border:1px solid var(--msg-line);border-radius:50%;background:#fff;font-size:19px;cursor:pointer}
+.msg-layout{max-width:900px;margin:auto;display:grid;grid-template-columns:310px minmax(0,1fr);min-height:calc(100vh - 80px)}
+.msg-list{background:#fff;border-right:1px solid var(--msg-line);padding:14px}.msg-search{width:100%;border:0;background:#f0f1f6;border-radius:16px;padding:13px 15px;font:inherit;outline:none}.msg-tabs{display:flex;gap:8px;margin:12px 0;overflow:auto}.msg-tab{border:0;background:#f0f1f6;border-radius:999px;padding:8px 13px;white-space:nowrap;cursor:pointer}.msg-tab.active{background:var(--msg-purple);color:#fff}.conversation{display:flex;gap:11px;align-items:center;padding:12px 8px;border-radius:16px;cursor:pointer;border:0;background:transparent;width:100%;text-align:left}.conversation.active{background:var(--msg-soft)}.conversation:hover{background:#f5f3ff}.avatar2{width:48px;height:48px;flex:0 0 48px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#6337e8,#12aebe);color:#fff;font-weight:800}.conv-main{min-width:0;flex:1}.conv-name{font-weight:800;display:flex;align-items:center;gap:6px}.conv-preview{font-size:13px;color:var(--msg-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:3px}.conv-meta{font-size:11px;color:var(--msg-muted);text-align:right}.unread{display:inline-grid;place-items:center;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:var(--msg-purple);color:#fff;font-size:11px;margin-top:5px}
+.chat{display:flex;flex-direction:column;min-width:0;background:linear-gradient(#fbfbfd,#f3f4f9)}.chat-head{display:flex;align-items:center;gap:11px;padding:15px 18px;background:#fff;border-bottom:1px solid var(--msg-line)}.chat-head-main{flex:1;min-width:0}.chat-name{font-weight:850}.online{font-size:12px;color:#20a56a;margin-top:3px}.chat-actions{display:flex;gap:6px}.small-icon{width:36px;height:36px;border:1px solid var(--msg-line);border-radius:50%;background:#fff;cursor:pointer}.chat-body{flex:1;padding:18px;overflow:auto;min-height:400px}.day-divider{text-align:center;color:var(--msg-muted);font-size:11px;margin:8px 0 18px}.bubble-row{display:flex;gap:8px;margin:12px 0;align-items:flex-end}.bubble-row.mine{justify-content:flex-end}.bubble{max-width:min(76%,480px);padding:11px 13px;border-radius:18px 18px 18px 5px;background:#fff;border:1px solid var(--msg-line);box-shadow:0 2px 8px rgba(25,28,50,.03)}.mine .bubble{background:linear-gradient(135deg,#6337e8,#8058f0);color:#fff;border:0;border-radius:18px 18px 5px 18px}.bubble-meta{font-size:10px;opacity:.7;margin-top:5px;display:flex;gap:6px;align-items:center}.seen{font-size:11px;color:#6337e8}.mine .seen{color:#fff}.attachment{display:flex;align-items:center;gap:10px;padding:10px;border-radius:13px;background:rgba(255,255,255,.18);margin-bottom:6px}.attachment-icon{font-size:24px}.reply-chip{font-size:11px;padding:5px 8px;border-radius:9px;background:rgba(99,55,232,.09);color:var(--msg-purple);margin-bottom:5px}.chat-compose{padding:10px 14px;background:#fff;border-top:1px solid var(--msg-line)}.compose-tools{display:flex;gap:7px;margin-bottom:8px;flex-wrap:wrap}.tool{border:1px solid var(--msg-line);background:#f7f7fb;border-radius:999px;padding:8px 11px;cursor:pointer}.compose-row{display:flex;gap:8px;align-items:flex-end}.message-input{flex:1;min-width:0;resize:none;max-height:110px;border:1px solid #dfe1eb;border-radius:18px;padding:12px 14px;font:inherit;outline:none}.send-btn{width:46px;height:46px;border:0;border-radius:50%;background:var(--msg-purple);color:#fff;font-size:20px;cursor:pointer}.compose-note{font-size:11px;color:var(--msg-muted);margin-top:6px}
+.empty-chat{display:grid;place-items:center;min-height:450px;text-align:center;padding:30px;color:var(--msg-muted)}.backend-cta{margin-top:16px;display:grid;gap:10px;max-width:360px;margin-left:auto;margin-right:auto}.backend-cta input{width:100%;padding:12px 14px;border:1px solid var(--msg-line);border-radius:14px;font:inherit}.backend-cta button{border:0;background:var(--msg-purple);color:#fff;border-radius:14px;padding:12px 16px;font:inherit;font-weight:800;cursor:pointer}.user-id-note{font-size:11px;color:var(--msg-muted);word-break:break-all;margin-top:8px}.discover-search{width:100%;padding:12px 14px;border:1px solid var(--msg-line);border-radius:14px;font:inherit;outline:none}.discover-list{display:grid;gap:8px;margin-top:12px}.discover-user{display:flex;align-items:center;gap:11px;width:100%;border:1px solid var(--msg-line);background:#fff;border-radius:15px;padding:11px;text-align:left;cursor:pointer}.discover-user:hover{background:#f7f5ff;border-color:#d9d0ff}.discover-user-main{min-width:0;flex:1}.discover-user-name{font-weight:800}.discover-user-role{font-size:11px;color:var(--msg-muted);margin-top:3px}.discover-empty{font-size:12px;color:var(--msg-muted);padding:12px 4px;text-align:center}.empty-chat strong{display:block;color:var(--msg-ink);font-size:20px;margin-bottom:8px}.status-pill{font-size:10px;background:#e4f8ed;color:#16824e;padding:4px 7px;border-radius:999px}.sheet{position:fixed;inset:0;background:rgba(20,22,35,.35);display:none;align-items:flex-end;z-index:50}.sheet.open{display:flex}.sheet-card{width:100%;max-width:560px;margin:auto auto 0;background:#fff;border-radius:24px 24px 0 0;padding:20px;max-height:80vh;overflow:auto}.sheet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.sheet-head h3{margin:0;font-size:20px}.sheet-close{border:0;background:#f0f1f6;border-radius:50%;width:34px;height:34px;cursor:pointer}.sheet-option{display:flex;gap:12px;align-items:center;width:100%;border:1px solid var(--msg-line);background:#fff;border-radius:15px;padding:13px;margin:8px 0;text-align:left;cursor:pointer}.sheet-option b{display:block}.sheet-option span{font-size:12px;color:var(--msg-muted)}
+@media(max-width:760px){.msg-layout{display:block;min-height:auto}.msg-list{border-right:0;padding-bottom:8px}.chat{min-height:600px}.chat-body{min-height:360px}.msg-list.collapsed{display:none}.msg-topin{padding:12px}.msg-title{font-size:21px}.conversation{padding:10px 5px}.chat-head{padding:12px}.chat-body{padding:12px}.bubble{max-width:85%}}
+
+/* V15 — Messages composer visibility + collapsible bottom navigation */
+body.messages-page{padding-bottom:0!important}
+body.messages-page .messages-app{padding-bottom:0}
+body.messages-page .msg-layout{padding-bottom:18px}
+body.messages-page .bottom{transition:height .22s ease,transform .22s ease}
+body.messages-page .bottom.messages-nav-minimized{height:18px;overflow:visible}
+body.messages-page .bottom.messages-nav-minimized .bottomin{display:none}
+body.messages-page .messages-nav-toggle{position:absolute;top:-18px;left:50%;transform:translateX(-50%);width:74px;height:24px;border:1px solid var(--line);border-bottom:0;border-radius:14px 14px 0 0;background:#fff;color:var(--purple);font-size:13px;font-weight:900;cursor:pointer;box-shadow:0 -3px 12px rgba(23,27,43,.08)}
+body.messages-page .bottom:not(.messages-nav-minimized) .messages-nav-toggle{top:-12px;height:22px;border-bottom:1px solid var(--line);border-radius:12px}
+body.messages-page .chat-compose{position:relative;z-index:2;padding-bottom:12px}
+@media(max-width:760px){body.messages-page .msg-layout{padding-bottom:4px}body.messages-page .chat{min-height:calc(100vh - 120px)}body.messages-page .chat-compose{padding-bottom:14px}}
+
+/* V27 ADVANCED SOCIAL MESSAGING UI — visual upgrade only */
+:root{--v27-navy:#07152e;--v27-panel:#0d1e3b;--v27-panel2:#10274a;--v27-line:#234268;--v27-blue:#2f80ff;--v27-cyan:#19c8d8;--v27-green:#19d38b;--v27-text:#eef6ff;--v27-muted:#8fa8c7}
+body.messages-page{background:#07152e!important;color:var(--v27-text)}
+body.messages-page .messages-app{min-height:100vh;background:radial-gradient(circle at 80% 0%,#143d69 0,#07152e 38%,#050f21 100%);color:var(--v27-text);padding-bottom:0}
+body.messages-page .msg-top{position:sticky;top:0;background:rgba(5,16,34,.82);border-bottom:1px solid rgba(90,143,198,.25);backdrop-filter:blur(20px)}
+body.messages-page .msg-topin{max-width:1500px;padding:14px 22px}
+body.messages-page .msg-title{font-size:24px;color:#fff;letter-spacing:-.4px}.msg-sub{color:#91a9c8!important}
+body.messages-page .msg-topin:after{content:'More than a chat  •  It’s a journey together';margin-left:auto;font-size:14px;font-weight:700;color:#dcecff;font-style:italic}
+body.messages-page .msg-top-actions{order:3}.msg-icon{background:#102545!important;border-color:#2a486e!important;color:#fff}
+body.messages-page .msg-layout{max-width:1500px;grid-template-columns:315px minmax(430px,1fr) 350px;gap:10px;padding:10px 12px 22px;min-height:calc(100vh - 75px)}
+body.messages-page .msg-list,body.messages-page .chat,body.messages-page .people-rail{background:rgba(10,28,54,.88);border:1px solid #21446b;border-radius:18px;box-shadow:0 18px 50px rgba(0,0,0,.28);overflow:hidden}
+body.messages-page .msg-list{padding:13px;border-right:1px solid #21446b}
+body.messages-page .msg-search,body.messages-page .discover-search{background:#102645!important;color:#eaf5ff!important;border:1px solid #284b73!important;border-radius:14px!important}
+body.messages-page .msg-search::placeholder,body.messages-page .discover-search::placeholder{color:#7792b3}
+body.messages-page .msg-tab{background:#102645;color:#a9bdd5;border:1px solid #244568}.msg-tab.active{background:linear-gradient(135deg,#6a38ff,#287eff)!important;color:#fff;border-color:transparent}
+body.messages-page .conversation{color:#eaf4ff;border:1px solid transparent;margin:3px 0}.conversation:hover,.conversation.active{background:linear-gradient(90deg,#14345e,#102744)!important;border-color:#2c5684!important}
+body.messages-page .conv-name{color:#f4f8ff}.conv-preview,.conv-meta{color:#819aba!important}
+body.messages-page .avatar2{background:linear-gradient(135deg,#267cff,#17c7cf);box-shadow:0 0 0 2px rgba(43,134,255,.16)}
+body.messages-page .chat{background:#08182f}.chat-head{background:rgba(11,31,59,.97)!important;border-bottom:1px solid #24476e!important;color:#fff}.chat-name{color:#fff}.online{color:#20d894!important}.small-icon{background:#102645!important;color:#dff0ff;border-color:#2b4d75!important}
+body.messages-page .chat-body{background:radial-gradient(circle at 30% 20%,rgba(36,91,143,.12),transparent 45%),#08182f}
+body.messages-page .bubble{background:#102746;border-color:#23496f;color:#eef6ff;box-shadow:0 8px 20px rgba(0,0,0,.16)}
+body.messages-page .mine .bubble{background:linear-gradient(135deg,#0f8d79,#0874c8);color:#fff}.mine .seen{color:#d7fff0!important}
+body.messages-page .chat-compose{background:#0b203e!important;border-top:1px solid #23486e}.tool{background:#102746;color:#b9cce3;border-color:#2a4d73}.message-input{background:#102746;color:#fff;border-color:#2c527a}.message-input::placeholder{color:#7893b4}.send-btn{background:linear-gradient(135deg,#2e7dff,#14c7c6)}
+body.messages-page .compose-note{color:#7793b3!important}
+body.messages-page .people-rail{display:flex;flex-direction:column;min-width:0}
+.v27-rail-head{padding:16px;border-bottom:1px solid #23476e;background:linear-gradient(180deg,#112c52,#0d213f)}.v27-rail-title{font-size:20px;font-weight:900}.v27-rail-sub{font-size:11px;color:#8ca8c8;margin-top:4px}.v27-rail-tabs{display:flex;gap:7px;margin-top:13px;overflow:auto}.v27-rail-tab{border:0;border-radius:999px;padding:8px 11px;background:#132b4d;color:#9fb5cf;cursor:pointer}.v27-rail-tab.active{background:linear-gradient(135deg,#713cff,#287eff);color:#fff}.v27-people{padding:12px;display:grid;gap:8px;overflow:auto}.v27-person{display:flex;gap:9px;align-items:center;padding:10px;border:1px solid #24486f;border-radius:14px;background:#0e2342}.v27-person-main{min-width:0;flex:1}.v27-person-name{font-weight:850;font-size:13px;color:#f3f8ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.v27-person-meta{font-size:10px;color:#83a0c0;margin-top:3px}.v27-tags{font-size:9px;color:#6fd9dc;margin-top:4px}.v27-connect{border:0;border-radius:10px;padding:8px 9px;background:#2b7cff;color:#fff;font-weight:800;cursor:pointer;font-size:10px}.v27-connect.accept{background:#13b879}.v27-connect.pending{background:#253d5d;color:#a9bed5}.v27-profile{margin:0 12px 12px;border:1px solid #285177;border-radius:15px;background:linear-gradient(145deg,#112e54,#0c203c);padding:14px}.v27-profile-cover{height:72px;border-radius:12px;background:linear-gradient(135deg,#154b74,#0b9c8e 55%,#1d6fe5);position:relative}.v27-profile-avatar{width:58px;height:58px;border-radius:50%;position:absolute;left:13px;bottom:-29px;border:4px solid #0c203c;background:linear-gradient(135deg,#ff9d42,#2b7cff);display:grid;place-items:center;font-weight:900;font-size:22px}.v27-profile-body{padding-top:34px}.v27-profile-name{font-size:17px;font-weight:900}.v27-profile-handle{font-size:10px;color:#8da8c6;margin-top:2px}.v27-profile-stats{display:flex;justify-content:space-between;margin-top:12px;font-size:10px;color:#94acc7}.v27-profile-stats b{display:block;color:#fff;font-size:14px}.v27-rail-footer{padding:10px 12px;border-top:1px solid #23476e;color:#7f9aba;font-size:10px;text-align:center}
+.v27-section-label{padding:10px 4px 4px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#6888ad;font-weight:900}
+@media(max-width:1100px){body.messages-page .msg-layout{grid-template-columns:290px minmax(420px,1fr)}body.messages-page .people-rail{display:none}}
+@media(max-width:760px){body.messages-page .msg-topin:after{display:none}body.messages-page .msg-layout{display:block;padding:6px}.people-rail{display:none!important}body.messages-page .msg-list{border-right:0;border-radius:16px;margin-bottom:8px}.chat{border-radius:16px!important}.msg-list.collapsed{display:none}}
+
+/* V28 COMPLETE MESSENGER — premium, user-friendly, travel-first */
+.v28-quickbar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:8px}.v28-tool{transition:.18s transform,.18s background}.v28-tool:hover{transform:translateY(-1px);background:#173456!important}.v28-location-card{margin-top:6px;border:1px solid #2d5c87;border-radius:15px;padding:12px;background:linear-gradient(135deg,#102d50,#0b2340)}.v28-location-card .loc-title{font-weight:850}.v28-location-card .loc-sub{font-size:11px;color:#91b0cf;margin-top:4px}.v28-location-actions{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}.v28-mini-btn{border:1px solid #315b84;background:#14304f;color:#eaf5ff;border-radius:10px;padding:7px 10px;cursor:pointer;font-weight:700}.v28-media{display:block;max-width:310px;max-height:250px;border-radius:12px;margin-top:3px}.v28-audio{width:min(310px,100%);margin-top:4px}.v28-file{display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;background:rgba(255,255,255,.09)}.v28-file-name{font-weight:750;word-break:break-word}.v28-file-meta{font-size:10px;opacity:.7;margin-top:3px}.v28-status{font-size:10px;opacity:.78}.v28-live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#19d38b;box-shadow:0 0 0 4px rgba(25,211,139,.12);margin-right:5px}.v28-compose-preview{display:flex;gap:8px;align-items:center;padding:8px 10px;border:1px dashed #315b84;border-radius:12px;margin-bottom:8px;color:#b9cce3;font-size:12px}.v28-progress{height:4px;border-radius:9px;background:#1c3959;overflow:hidden;margin-top:7px}.v28-progress>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#2e7dff,#14c7c6);transition:width .2s}.v28-typing{font-size:11px;color:#74cfe0;min-height:16px;padding:0 2px}.v28-privacy{font-size:10px;color:#7594b6;margin-top:5px}.v28-map-card{position:relative;overflow:hidden;border-radius:13px;border:1px solid #2e5a83;background:linear-gradient(135deg,#173b5d,#0c263f);min-height:120px;padding:14px}.v28-map-grid{position:absolute;inset:0;opacity:.22;background-image:linear-gradient(#79a6c8 1px,transparent 1px),linear-gradient(90deg,#79a6c8 1px,transparent 1px);background-size:30px 30px}.v28-map-content{position:relative;z-index:1}.v28-pin{font-size:30px}.v28-live-route{height:3px;background:linear-gradient(90deg,#19d38b,#2e7dff);border-radius:4px;margin:8px 0}.v28-feature-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}.v28-feature{padding:12px;border:1px solid #284f75;border-radius:14px;background:#102746;cursor:pointer}.v28-feature b{display:block}.v28-feature span{display:block;font-size:10px;color:#83a0c0;margin-top:3px}@media(max-width:760px){.v28-quickbar{overflow:auto;flex-wrap:nowrap;padding-bottom:2px}.v28-tool{white-space:nowrap}.v28-media{max-width:260px}}
+
+/* V28 FINAL TOUCH — PICNIKO signature interaction layer */
+.v28-quickbar{display:flex;gap:8px;overflow-x:auto;padding:7px 0 9px;scrollbar-width:none}.v28-quickbar::-webkit-scrollbar{display:none}
+body.messages-page .v28-tool{border:1px solid rgba(70,121,180,.55);background:linear-gradient(135deg,rgba(18,48,87,.96),rgba(12,31,59,.96));color:#eaf4ff;box-shadow:0 4px 14px rgba(0,0,0,.16);white-space:nowrap;transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease}.v28-tool:hover{transform:translateY(-1px);border-color:#4ea4ff;box-shadow:0 7px 18px rgba(20,126,255,.18)}
+.v28-tool.v28-plan{background:linear-gradient(135deg,#6337e8,#12aebe);border-color:transparent;font-weight:900}.v28-tool.v28-smart{background:linear-gradient(135deg,#162f57,#1a6b7b);border-color:#35d4d9}
+.v28-hero-note{display:flex;align-items:center;gap:9px;padding:9px 12px;margin-bottom:9px;border:1px solid rgba(67,130,198,.25);border-radius:15px;background:linear-gradient(135deg,rgba(17,44,80,.82),rgba(11,30,57,.72));color:#cfe5ff;font-size:11px}.v28-hero-note b{color:#fff}.v28-hero-note .spark{font-size:17px}
+.v28-plan-form{display:grid;gap:10px}.v28-plan-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.v28-plan-form input,.v28-plan-form select{width:100%;border:1px solid #dfe5ef;border-radius:13px;padding:11px 12px;font:inherit;background:#fbfcff}.v28-plan-form label{font-size:10px;font-weight:900;color:#6e7890;text-transform:uppercase;letter-spacing:.7px}.v28-plan-field{display:grid;gap:5px}.v28-plan-submit{border:0;border-radius:15px;padding:13px 15px;background:linear-gradient(135deg,#6337e8,#12aebe);color:#fff;font-weight:900;cursor:pointer}.v28-feature-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.v28-feature{border:1px solid #e2e7f0;background:linear-gradient(135deg,#fff,#f6f9ff);border-radius:17px;padding:14px;text-align:left;cursor:pointer}.v28-feature b{display:block;margin-bottom:4px}.v28-feature span{font-size:11px;color:#778198;line-height:1.35}.v28-trip-card{margin-top:7px;padding:14px;border-radius:18px;background:linear-gradient(135deg,#102d56,#153f70);border:1px solid #2f628f;color:#eef7ff;box-shadow:0 10px 28px rgba(5,18,39,.22)}.v28-trip-card .trip-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.v28-trip-card .trip-badge{font-size:9px;font-weight:900;letter-spacing:.8px;padding:5px 8px;border-radius:999px;background:rgba(25,211,139,.14);color:#7cf0c1}.v28-trip-card h4{margin:4px 0 5px;font-size:17px}.v28-trip-card p{margin:0;color:#b9d0e8;font-size:11px;line-height:1.4}.v28-trip-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.v28-trip-meta span{font-size:10px;padding:6px 8px;border-radius:999px;background:rgba(255,255,255,.08);color:#dcecff}.v28-mini-actions{display:flex;gap:7px;margin-top:10px}.v28-mini-actions button{border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);color:#fff;border-radius:10px;padding:7px 9px;font-size:10px;cursor:pointer}.v28-ai-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border-radius:999px;background:linear-gradient(135deg,rgba(99,55,232,.18),rgba(18,174,190,.18));color:#dffbff;border:1px solid rgba(75,180,220,.25);font-size:10px;font-weight:900}
+@media(max-width:520px){.v28-plan-grid,.v28-feature-grid{grid-template-columns:1fr}.v28-hero-note{font-size:10px}}
+</style>
+</head>
+<body class="messages-page">
+<div class="messages-app">
+<header class="msg-top"><div class="msg-topin"><div><div class="msg-title">Messages</div><div class="msg-sub">Connect with friends, groups and verified contacts</div></div><div class="msg-top-actions"><button aria-label="Refresh messages" class="msg-icon" id="refreshBtn">↻</button><button aria-label="New chat" class="msg-icon" id="newChatBtn">＋</button><button aria-label="Message settings" class="msg-icon" id="settingsBtn">⚙</button></div></div></header>
+<div class="msg-layout">
+<aside class="msg-list" id="msgList">
+<div class="v27-section-label">PICNIKO MESSAGES</div>
+<input aria-label="Search messages" class="msg-search" id="searchInput" placeholder="Search chats, people…"/>
+<div class="msg-tabs"><button class="msg-tab active" data-filter="all">All</button><button class="msg-tab" data-filter="unread">Unread</button><button class="msg-tab" data-filter="groups">Groups</button><button class="msg-tab" data-filter="favorites">★</button></div>
+<div aria-live="polite" class="compose-note" id="backendStatus" style="padding:8px 4px"></div>
+<div id="conversationList"></div>
+</aside>
+<section class="chat" id="chatPanel"><div class="empty-chat"><div><strong>Choose a conversation</strong><div style="margin-top:6px;color:#7f9aba">Connect, share and plan your next journey.</div></div></div></section>
+<aside class="people-rail" id="peopleRail">
+<div class="v27-rail-head">
+<div class="v27-rail-title">Find People &amp; Connect</div>
+<div class="v27-rail-sub">Discover real PICNIKO members around you.</div>
+<input autocomplete="off" class="discover-search" id="railPeopleSearch" placeholder="Search name, city, interest…" style="margin-top:12px"/>
+<div class="v27-rail-tabs"><button class="v27-rail-tab active" data-rail-filter="discover">Discover</button><button class="v27-rail-tab" data-rail-filter="friends">Friends</button><button class="v27-rail-tab" data-rail-filter="requests">Requests</button></div>
+</div>
+<div class="v27-people" id="railPeopleList"><div class="discover-empty" style="color:#7895b6">Loading people…</div></div>
+<div class="v27-profile" id="railProfile">
+<div class="v27-profile-cover"><div class="v27-profile-avatar">P</div></div>
+<div class="v27-profile-body"><div class="v27-profile-name">PICNIKO Member</div><div class="v27-profile-handle">Explore • Connect • Share • Earn</div><div class="v27-profile-stats"><span><b>—</b>Posts</span><span><b>—</b>Friends</span><span><b>—</b>Following</span></div></div>
+</div>
+<div class="v27-rail-footer">Good People • Better Journeys • Real Connections</div>
+</aside>
+</div>
+</div>
+<div class="sheet" id="sheet"><div class="sheet-card"><div class="sheet-head"><h3 id="sheetTitle">Options</h3><button class="sheet-close" id="sheetClose">✕</button></div><div id="sheetContent"></div></div></div>
+<script type="module">
+import {mountBottom} from "../../js/app.js";
+import {getDb, currentUser} from "../../js/db.js";
+mountBottom('home');
+let conversations=[
+{id:1,name:'Aarav Patil',initial:'A',preview:'Photo पाठवली',time:'2m',unread:2,online:true,favorite:true,type:'friend',messages:[{mine:false,text:'आज संध्याकाळी भेटूया?',time:'19:12'},{mine:true,text:'हो, नक्की! 😊',time:'19:13',seen:true},{mine:false,file:true,fileType:'image',text:'Photo पाठवली',time:'19:14'},{mine:true,text:'छान फोटो आहे!',time:'19:15',seen:true}]},
+{id:2,name:'Sahyadri Creators',initial:'S',preview:'New video shared',time:'1h',unread:0,online:false,favorite:false,type:'group',messages:[{mine:false,text:'आजच्या campaign बद्दल अपडेट आहे.',time:'18:02'},{mine:true,text:'मी details पाहतो.',time:'18:05',seen:true}]},
+{id:3,name:'Mulshi Fresh Team',initial:'M',preview:'Document attached',time:'3h',unread:4,online:true,favorite:true,type:'friend',messages:[{mine:false,file:true,fileType:'document',text:'Product brief.pdf',time:'16:40'},{mine:true,text:'Received. धन्यवाद.',time:'16:42',seen:true}]},
+{id:4,name:'PICNIKO Community',initial:'P',preview:'You were mentioned',time:'Yesterday',unread:0,online:false,favorite:false,type:'group',messages:[{mine:false,text:'Welcome to the community!',time:'Yesterday'}]}
+];
+let selected=null,filter='all';
+let activeUser=null;
+let backendMode=false;
+let loadingBackend=false;
+let backendStatus='Checking Supabase conversations…';
+let realtimeChannel=null;
+let realtimeConversationIds=[];
+let discoverTimer=null;
+let discoverLoading=false;
+const $=id=>document.getElementById(id);
+
+function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,ch=>{if(ch==='&')return '&amp;';if(ch==='<')return '&lt;';if(ch==='>')return '&gt;';if(ch==='"')return '&quot;';return '&#39;';});}
+function formatTime(value){if(!value)return '';const d=new Date(value);return Number.isNaN(d.getTime())?'':d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});}
+async function cleanupRealtime(){
+  const db=getDb();
+  if(db && realtimeChannel){try{await db.removeChannel(realtimeChannel);}catch(_e){}}
+  realtimeChannel=null; realtimeConversationIds=[];
+}
+async function subscribeToMessages(ids){
+  const db=getDb(); if(!db || !ids?.length)return;
+  await cleanupRealtime(); realtimeConversationIds=[...ids];
+  realtimeChannel=db.channel(`picniko-messages-${activeUser?.id||'session'}`)
+    .on('postgres_changes',{event:'INSERT',schema:'public',table:'messages'},async payload=>{
+      const m=payload.new||{}; if(!realtimeConversationIds.includes(m.conversation_id)||m.deleted_at)return;
+      const c=conversations.find(x=>String(x.id)===String(m.conversation_id)); if(!c)return;
+      if(c.messages.some(x=>String(x.id)===String(m.id)))return;
+      const mapped={id:m.id,mine:String(m.sender_user_id)===String(activeUser.id),text:m.message_text||'',time:formatTime(m.created_at),created_at:m.created_at,seen:false,file:!!m.media_url,fileType:m.message_type==='image'?'image':m.message_type==='video'?'video':m.message_type==='audio'?'audio':m.message_type==='text'?'text':'file',media_url:m.media_url};
+      if(mapped.media_url) mapped.media_url=await v28Signed(mapped.media_url)||mapped.media_url;
+      c.messages.push(mapped); c.preview=mapped.text||m.message_type||'Message'; c.time=mapped.time;
+      if(String(selected)!==String(c.id)&&!mapped.mine)c.unread=(c.unread||0)+1;
+      renderList(); if(String(selected)===String(c.id))renderChat();
+    })
+    .on('postgres_changes',{event:'UPDATE',schema:'public',table:'live_locations'},payload=>{
+      const l=payload.new||{}; const c=conversations.find(x=>String(x.id)===String(l.conversation_id));
+      if(!c)return; const m=c.messages.find(x=>String(x.id)===String(l.message_id));
+      if(m){m.latitude=Number(l.latitude);m.longitude=Number(l.longitude);m.live=true;m.live_active=!!l.is_active&&new Date(l.expires_at).getTime()>Date.now();m.updated_at=l.updated_at; if(String(selected)===String(c.id))renderChat();}
+    })
+    .subscribe(status=>{
+      if(status==='SUBSCRIBED'){backendStatus=`${conversations.length} real backend conversation(s) loaded • Live updates ON`;renderList();}
+      else if(status==='CHANNEL_ERROR'||status==='TIMED_OUT'){backendStatus=`${conversations.length} real backend conversation(s) loaded • Live updates unavailable`;renderList();}
+    });
+}
+async function loadBackendConversations({preserveSelected=true}={}){
+  const db=getDb();
+  if(!db){backendStatus='Supabase is not configured.';return;}
+  const user=await currentUser();
+  if(!user){await cleanupRealtime();activeUser=null;backendMode=false;conversations=[];selected=null;backendStatus='Please log in to load real conversations.';renderList();return;}
+  activeUser=user; loadingBackend=true; backendStatus='Loading your real conversations…';
+  loadRailPeople(document.getElementById('railPeopleSearch')?.value||'').catch(()=>{});
+  const previousSelected=selected; conversations=[]; if(!preserveSelected)selected=null; renderList();
+  const {data: memberships,error:memberError}=await db.from('conversation_members').select('conversation_id,user_id,last_read_at').eq('user_id',user.id);
+  if(memberError){await cleanupRealtime();backendStatus=memberError.message||'Could not load conversation membership.';loadingBackend=false;renderList();openSheet('Messages database error',`<p style="color:var(--msg-muted)">${escapeHtml(backendStatus)}</p>`);return;}
+  if(!memberships?.length){await cleanupRealtime();backendMode=true;loadingBackend=false;backendStatus='No backend conversations are assigned to this account yet.';selected=null;renderList();return;}
+  const ids=memberships.map(x=>x.conversation_id);
+  const {data: rows,error:conversationError}=await db.from('conversations').select('id,conversation_type,title,created_by,created_at,updated_at').in('id',ids).order('updated_at',{ascending:false});
+  if(conversationError){await cleanupRealtime();backendStatus=conversationError.message||'Conversation load failed.';loadingBackend=false;renderList();openSheet('Messages database error',`<p style="color:var(--msg-muted)">${escapeHtml(backendStatus)}</p>`);return;}
+  if(!rows?.length){await cleanupRealtime();backendMode=true;loadingBackend=false;backendStatus='Membership exists, but no conversation record was returned.';selected=null;renderList();return;}
+  const {data: messageRows,error:messageError}=await db.from('messages').select('id,conversation_id,sender_user_id,message_type,message_text,media_url,created_at,edited_at,deleted_at').in('conversation_id',ids).is('deleted_at',null).order('created_at',{ascending:true}).limit(500);
+  if(messageError){await cleanupRealtime();backendStatus=messageError.message||'Messages could not be loaded.';loadingBackend=false;renderList();openSheet('Messages database error',`<p style="color:var(--msg-muted)">${escapeHtml(backendStatus)}</p>`);return;}
+  const byConversation={}; (messageRows||[]).forEach(m=>{(byConversation[m.conversation_id] ||= []).push(m);});
+  const {data: allMembers}=await db.from('conversation_members').select('conversation_id,user_id,last_read_at').in('conversation_id',ids);
+  const memberMap={}; (allMembers||[]).forEach(m=>{(memberMap[m.conversation_id] ||= []).push(m);});
+  const readMap=new Map((memberships||[]).map(m=>[String(m.conversation_id),m.last_read_at]));
+  conversations=rows.map(c=>{
+    const msgs=byConversation[c.id]||[];
+    const myReadAt=readMap.get(String(c.id));
+    const mapped=msgs.map(m=>({id:m.id,mine:String(m.sender_user_id)===String(user.id),text:m.message_text||'',time:formatTime(m.created_at),created_at:m.created_at,seen:false,file:!!m.media_url,fileType:m.message_type==='image'?'image':m.message_type==='video'?'video':m.message_type==='audio'?'audio':m.message_type==='text'?'text':'file',media_url:m.media_url}));
+    const last=mapped[mapped.length-1];
+    const unread=msgs.filter(m=>String(m.sender_user_id)!==String(user.id)&&(!myReadAt||new Date(m.created_at)>new Date(myReadAt))).length;
+    const otherMembers=(memberMap[c.id]||[]).filter(m=>String(m.user_id)!==String(user.id));
+    const otherRead=Math.max(0,...otherMembers.map(m=>m.last_read_at?new Date(m.last_read_at).getTime():0));
+    mapped.forEach(m=>{if(m.mine&&m.created_at&&otherRead){m.seen=new Date(m.created_at).getTime()<=otherRead;}});
+    return {id:c.id,name:c.title||'PICNIKO Conversation',initial:(c.title||'P').trim().charAt(0).toUpperCase()||'P',preview:last?.text||({image:'📷 Photo',video:'🎬 Video',audio:'🎵 Audio',file:'📎 File'}[last?.fileType]||c.conversation_type||'Conversation'),time:last?.time||formatTime(c.updated_at||c.created_at),unread,online:false,favorite:false,type:c.conversation_type==='group'?'group':'friend',messages:mapped,backend:true};
+  });
+  backendMode=true;loadingBackend=false; selected=preserveSelected&&conversations.some(c=>String(c.id)===String(previousSelected))?previousSelected:null;
+  backendStatus=`${conversations.length} real backend conversation(s) loaded • Connecting live updates…`; renderList(); await subscribeToMessages(ids);
+  if(selected&&conversations.some(c=>String(c.id)===String(selected)))renderChat();
+}
+
+async function persistMessage(c,text){
+  const db=getDb();
+  if(!db||!activeUser||!c?.backend){openSheet('Backend conversation required','<p style="color:var(--msg-muted)">हा chat demo नाही. Supabase मध्ये तुमच्या user साठी conversation membership उपलब्ध नाही. आधी backend conversation तयार/assign करावी लागेल.</p>');return false;}
+  const {data,error}=await db.from('messages').insert({conversation_id:c.id,sender_user_id:activeUser.id,message_type:'text',message_text:text}).select('id,conversation_id,sender_user_id,message_type,message_text,created_at').single();
+  if(error){openSheet('Message not sent',`<p style="color:var(--msg-muted)">${escapeHtml(error.message||'Supabase insert failed')}</p>`);return false;}
+  c.messages.push({id:data.id,mine:true,text:data.message_text||text,time:formatTime(data.created_at)||'Now',seen:false});
+  c.preview=data.message_text||text;c.time=formatTime(data.created_at)||'Now';
+  return true;
+}
+
+function visible(){const q=$('searchInput').value.toLowerCase();return conversations.filter(c=>(filter==='all'||(filter==='unread'&&c.unread)||(filter==='groups'&&c.type==='group')||(filter==='favorites'&&c.favorite))&&(c.name.toLowerCase().includes(q)||c.preview.toLowerCase().includes(q)));}
+function renderList(){ $('backendStatus').textContent=backendStatus; $('conversationList').innerHTML=visible().map(c=>`<button class="conversation ${String(selected)===String(c.id)?'active':''}" data-id="${c.id}"><span class="avatar2">${escapeHtml(c.initial)}</span><span class="conv-main"><span class="conv-name">${escapeHtml(c.name)}${c.favorite?' ★':''}</span><span class="conv-preview">${escapeHtml(c.preview)}</span></span><span class="conv-meta">${escapeHtml(c.time)}${c.unread?`<span class="unread">${c.unread}</span>`:''}</span></button>`).join('')||`<div class="empty-chat" style="min-height:250px"><div><strong>No real conversations yet</strong><div>Database is connected, but this account has no conversation membership.</div>${activeUser?`<div class="backend-cta"><button id="emptyNewChat">＋ Find PICNIKO users</button></div>`:''}</div></div>`; }
+function renderChat(){const c=conversations.find(x=>String(x.id)===String(selected));if(!c){$('chatPanel').innerHTML='<div class="empty-chat"><div><strong>Choose a conversation</strong>Select a friend or group to start messaging.</div></div>';return;}c.unread=0;$('chatPanel').innerHTML=`<div class="chat-head"><button class="small-icon" id="backToList" aria-label="Back">‹</button><span class="avatar2">${c.initial}</span><div class="chat-head-main"><div class="chat-name">${c.name} ${c.favorite?'★':''}</div><div class="online">${c.online?'● Online':'Last seen recently'}</div></div><div class="chat-actions"><button class="small-icon" id="voiceBtn" aria-label="Voice call">☎</button><button class="small-icon" id="videoBtn" aria-label="Video call">▣</button><button class="small-icon" id="chatMoreBtn" aria-label="More options">⋯</button></div></div><div class="chat-body" id="chatBody"><div class="day-divider">Today</div>${c.messages.map(messageHTML).join('')}</div><div class="chat-compose"><div class="v28-hero-note"><span class="spark">✨</span><span><b>PICNIKO Smart Chat</b> — plan a trip, share moments and meet on the map.</span></div><div class="v28-quickbar">
+<button class="tool v28-tool v28-plan" id="planBtn">🗺️ Plan</button>
+<button class="tool v28-tool v28-smart" id="smartBtn">🤖 PIKO</button>
+<button class="tool v28-tool" id="attachBtn">📎 Attach</button>
+<button class="tool v28-tool" id="locationBtn">📍 Location</button>
+<button class="tool v28-tool" id="liveLocationBtn">🛰 Live location</button>
+<button class="tool v28-tool" id="emojiBtn">😊 Emoji</button>
+<button class="tool v28-tool" id="micBtn">🎙 Voice</button>
+</div>
+<input type="file" id="v28FileInput" hidden multiple>
+<input type="file" id="v28ImageInput" hidden accept="image/*" multiple>
+<input type="file" id="v28VideoInput" hidden accept="video/*" multiple>
+<input type="file" id="v28AudioInput" hidden accept="audio/*" multiple><div class="compose-row"><textarea class="message-input" id="messageInput" rows="1" placeholder="Type a message…"></textarea><button class="send-btn" id="sendBtn" aria-label="Send message">➤</button></div><div class="compose-note">${c.backend?'Connected to Supabase messaging.':'Demo mode: messages are local until Supabase messaging is connected.'}</div></div>`;$('chatBody').scrollTop=$('chatBody').scrollHeight;bindChat(c);renderList();}
+function messageHTML(m){return `<div class="bubble-row ${m.mine?'mine':''}">${!m.mine?'<span class="avatar2" style="width:30px;height:30px;flex-basis:30px;font-size:12px">'+(conversations.find(x=>String(x.id)===String(selected))?.initial||'P')+'</span>':''}<div class="bubble">${m.file?`<div class="attachment"><span class="attachment-icon">${m.fileType==='image'?'🖼️':'📄'}</span><div><b>${m.text}</b><div style="font-size:11px;opacity:.75">${m.fileType==='image'?'Image file':'Document file'}</div></div></div>`:''}${m.text&&!m.file?m.text:''}<div class="bubble-meta"><span>${m.time}</span>${m.mine&&m.seen?'<span class="seen">✓✓ Seen</span>':''}</div></div></div>`;}
+function openSheet(title,content){$('sheetTitle').textContent=title;$('sheetContent').innerHTML=content;$('sheet').classList.add('open');}
+function closeSheet(){$('sheet').classList.remove('open');}
+function bindChat(c){$('backToList').onclick=()=>{$('msgList').classList.remove('collapsed');$('chatPanel').innerHTML='<div class="empty-chat"><div><strong>Choose a conversation</strong>Select a friend or group to start messaging.</div></div>';selected=null;renderList();};$('sendBtn').onclick=sendMessage;$('messageInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}});$('fileBtn')?.addEventListener('click',()=>attachmentSheet('File'));$('photoBtn')?.addEventListener('click',()=>attachmentSheet('Photo'));$('videoFileBtn')?.addEventListener('click',()=>attachmentSheet('Video'));$('emojiBtn').onclick=()=>openSheet('Emoji',emojiMarkup());$('micBtn').onclick=()=>v28StartVoiceRecording(c);$('voiceBtn').onclick=()=>openSheet('Voice call',callMarkup('voice'));$('videoBtn').onclick=()=>openSheet('Video call',callMarkup('video'));$('chatMoreBtn').onclick=()=>openSheet('Conversation options',`<button class="sheet-option" id="favoriteAction"><b>⭐ ${c.favorite?'Remove from favorites':'Add to favorites'}</b><span>Change favorite status</span></button><button class="sheet-option" id="blockAction"><b>🚫 Block contact</b><span>Block messages from this contact</span></button><button class="sheet-option" id="clearAction"><b>🗑 Clear local chat</b><span>Remove demo messages from this conversation</span></button>`);$('favoriteAction')?.addEventListener('click',()=>{c.favorite=!c.favorite;closeSheet();renderChat();});$('blockAction')?.addEventListener('click',()=>{openSheet('Block contact',`<p>Block ${c.name}?</p><button class="sheet-option" id="confirmBlock"><b>Confirm block</b><span>This is a local demo action.</span></button>`);$('confirmBlock').onclick=()=>{c.blocked=true;closeSheet();renderChat();};});$('clearAction')?.addEventListener('click',()=>{c.messages=[];closeSheet();renderChat();});}
+async function sendMessage(){
+  const input=$('messageInput');if(!input||!input.value.trim())return;
+  const text=input.value.trim();const c=conversations.find(x=>String(x.id)===String(selected));if(!c)return;
+  input.disabled=true;
+  if(c.backend){const ok=await persistMessage(c,text);if(!ok){input.disabled=false;return;}}
+  else{openSheet('Message not sent','<p style="color:var(--msg-muted)">हा demo conversation आहे. Supabase मध्ये save करण्यासाठी backend conversation आवश्यक आहे.</p>');input.disabled=false;return;}
+  input.value='';input.disabled=false;renderChat();
+}
+function attachmentSheet(kind){if(typeof v28AttachmentMenu==='function'){v28AttachmentMenu();return;}openSheet('Attachment','<p style="color:var(--msg-muted)">Attachment tools are loading. Please try again.</p>');}
+function emojiMarkup(){return '<div style="display:grid;grid-template-columns:repeat(8,1fr);gap:8px">'+['😀','😂','😍','🥹','😊','🔥','❤️','👍','🙌','👏','😮','😢','🙏','🎉','🌿','🇮🇳','✨','💜','😎','🤝','💯','🚀','🍀','📍'].map(e=>`<button class="tool" data-emoji="${e}" style="font-size:22px;padding:10px">${e}</button>`).join('')+'</div>'}
+function callMarkup(kind){return `<div style="text-align:center;padding:15px"><div class="avatar2" style="margin:auto;width:75px;height:75px;font-size:30px">${conversations.find(x=>String(x.id)===String(selected))?.initial||'P'}</div><h3>${kind==='voice'?'Voice call':'Video call'} with ${conversations.find(x=>String(x.id)===String(selected))?.name||''}</h3><p style="color:var(--msg-muted)">Calling interface foundation is ready. Real calling needs a WebRTC/voice provider integration.</p><button class="sheet-option" id="startCall"><b>▶ Start demo call</b><span>Local UI preview only</span></button></div>`}
+async function getFriendRelationships(){
+  const db=getDb();
+  if(!db||!activeUser)return [];
+  const {data,error}=await db.from('friend_requests')
+    .select('id,requester_id,recipient_id,status,created_at,responded_at')
+    .or(`requester_id.eq.${activeUser.id},recipient_id.eq.${activeUser.id}`)
+    .order('created_at',{ascending:false});
+  if(error)throw error;
+  return data||[];
+}
+
+function relationshipFromRows(userId, rows){
+  const c=(rows||[]).find(x=>String(x.requester_id)===String(userId)||String(x.recipient_id)===String(userId));
+  if(!c)return {status:'none'};
+  if(c.status==='accepted')return {status:'friend',id:c.id};
+  if(c.status==='pending'&&String(c.requester_id)===String(activeUser.id))return {status:'pending_sent',id:c.id};
+  if(c.status==='pending'&&String(c.recipient_id)===String(activeUser.id))return {status:'pending_received',id:c.id};
+  return {status:c.status,id:c.id};
+}
+
+async function discoverPeople(search=''){
+  const db=getDb();
+  if(!db||!activeUser)return {users:[],relationships:[]};
+  const q=String(search||'').trim();
+  const {data,error}=await db.rpc('discover_message_users',{p_search:q});
+  if(error)throw error;
+  const users=(data||[]).filter(u=>String(u.user_id)!==String(activeUser.id));
+  const relationships=await getFriendRelationships();
+  return {users,relationships};
+}
+
+async function discoverUsers(search=''){
+  const list=$('discoverUserList');
+  const status=$('discoverStatus');
+  if(!list||!activeUser)return;
+  list.innerHTML='<div class="discover-empty">Loading registered PICNIKO users…</div>';
+  try{
+    const {users,relationships}=await discoverPeople(search);
+    const q=String(search||'').trim();
+    if(status)status.textContent=`${users.length} registered user${users.length===1?'':'s'} found`;
+    if(!users.length){
+      list.innerHTML='<div class="discover-empty">No other PICNIKO user found.</div>';
+      if(status)status.textContent=q?'No matching registered user found.':'No other registered PICNIKO users found.';
+      return;
+    }
+    list.innerHTML=users.map(u=>{
+      const name=(u.full_name||'PICNIKO User').trim()||'PICNIKO User';
+      const role=u.role||'User';
+      const rel=relationshipFromRows(u.user_id,relationships);
+      let action='＋ Connect', cls='';
+      if(rel.status==='friend'){action='💬 Message';cls='friend';}
+      else if(rel.status==='pending_sent'){action='Request sent';cls='pending';}
+      else if(rel.status==='pending_received'){action='✓ Accept';cls='accept';}
+      return `<div class="v27-person discover-person"><span class="avatar2" style="width:42px;height:42px;flex-basis:42px">${escapeHtml(name.charAt(0).toUpperCase())}</span><span class="v27-person-main"><div class="v27-person-name">${escapeHtml(name)}</div><div class="v27-person-meta">${escapeHtml(role)} • PICNIKO member</div><div class="v27-tags">${rel.status==='friend'?'Connected':rel.status==='pending_received'?'Wants to connect':'PICNIKO member'}</div></span><button class="v27-connect ${cls}" data-person-id="${escapeHtml(u.user_id)}" data-rel="${rel.status}" data-person-name="${escapeHtml(name)}">${action}</button></div>`;
+    }).join('');
+  }catch(e){
+    list.innerHTML=`<div class="discover-empty">${escapeHtml(e?.message||'User discovery failed.')}</div>`;
+    if(status)status.textContent='Database discovery error';
+  }
+}
+function scheduleDiscoverUsers(value){clearTimeout(discoverTimer);discoverTimer=setTimeout(()=>discoverUsers(value),220);}
+
+let railFilter='discover';
+let railPeopleCache=[];
+let railConnections=[];
+async function loadRailPeople(search=''){
+  const list=$('railPeopleList'); if(!list)return;
+  const db=getDb(); if(!db||!activeUser){list.innerHTML='<div class="discover-empty" style="color:#7895b6">Login to discover people.</div>';return;}
+  list.innerHTML='<div class="discover-empty" style="color:#7895b6">Finding people…</div>';
+  try{
+    const {users,relationships}=await discoverPeople(search);
+    railConnections=relationships;
+    railPeopleCache=users;
+    renderRailPeople();
+  }catch(e){
+    list.innerHTML=`<div class="discover-empty" style="color:#7895b6">${escapeHtml(e?.message||'Social discovery failed.')}</div>`;
+  }
+}
+async function loadRailConnections(){
+  try{railConnections=await getFriendRelationships();}catch(_e){railConnections=[];}
+}
+function relationshipFor(userId){return relationshipFromRows(userId,railConnections);}
+function renderRailPeople(){
+  const list=$('railPeopleList'); if(!list)return;
+  let rows=railPeopleCache||[];
+  if(railFilter==='friends')rows=rows.filter(u=>relationshipFor(u.user_id).status==='friend');
+  if(railFilter==='requests')rows=rows.filter(u=>relationshipFor(u.user_id).status==='pending_received');
+  if(!rows.length){list.innerHTML=`<div class="discover-empty" style="color:#7895b6">${railFilter==='friends'?'No friends yet. Start connecting.':railFilter==='requests'?'No pending requests.':'No matching PICNIKO members.'}</div>`;return;}
+  list.innerHTML=rows.map(u=>{
+    const rel=relationshipFor(u.user_id); const name=(u.full_name||'PICNIKO User').trim()||'PICNIKO User';
+    let label='＋ Connect', cls='';
+    if(rel.status==='friend')label='💬 Message',cls='friend';
+    else if(rel.status==='pending_sent'){label='Request sent';cls='pending';}
+    else if(rel.status==='pending_received'){label='✓ Accept';cls='accept';}
+    return `<div class="v27-person"><span class="avatar2" style="width:42px;height:42px;flex-basis:42px">${escapeHtml(name.charAt(0).toUpperCase())}</span><span class="v27-person-main"><div class="v27-person-name">${escapeHtml(name)}</div><div class="v27-person-meta">${escapeHtml(u.role||'PICNIKO member')} • PICNIKO</div><div class="v27-tags">${rel.status==='friend'?'Connected':rel.status==='pending_received'?'Wants to connect':'PICNIKO member'}</div></span><button class="v27-connect ${cls}" data-person-id="${escapeHtml(u.user_id)}" data-rel="${rel.status}">${label}</button></div>`;
+  }).join('');
+}
+async function railPersonAction(userId,rel){
+  const db=getDb(); if(!db||!activeUser)return;
+  try{
+    if(rel==='none'||rel==='declined'){
+      const {error}=await db.rpc('send_friend_request',{p_recipient_id:userId}); if(error)throw error;
+    } else if(rel==='pending_received'){
+      const c=relationshipFor(userId); const {error}=await db.rpc('respond_friend_request',{p_request_id:c.id,p_action:'accept'}); if(error)throw error;
+    } else if(rel==='friend'){
+      const {data,error}=await db.rpc('get_or_create_direct_conversation',{p_other_user_id:userId}); if(error)throw error;
+      selected=String(data); await loadBackendConversations({preserveSelected:true}); if(conversations.some(c=>String(c.id)===String(data))){$('msgList').classList.add('collapsed');renderChat();}
+      return;
+    }
+    await loadRailPeople($('railPeopleSearch')?.value||'');
+    await discoverUsers($('discoverSearch')?.value||'');
+  }catch(e){openSheet('Connect action failed',`<p style="color:var(--msg-muted)">${escapeHtml(e?.message||'Database action failed')}</p>`);}
+}
+$('railPeopleList')?.addEventListener('click',e=>{const b=e.target.closest('[data-person-id]');if(b)railPersonAction(b.dataset.personId,b.dataset.rel);});
+$('railPeopleSearch')?.addEventListener('input',e=>{clearTimeout(window.__railTimer);window.__railTimer=setTimeout(()=>loadRailPeople(e.target.value),220);});
+document.querySelectorAll('[data-rail-filter]').forEach(b=>b.addEventListener('click',()=>{railFilter=b.dataset.railFilter;document.querySelectorAll('[data-rail-filter]').forEach(x=>x.classList.toggle('active',x===b));renderRailPeople();}));
+
+async function openNewChatSheet(){
+  if(!activeUser){openSheet('Login required','<p style="color:var(--msg-muted)">Please login with your PICNIKO account first.</p>');return;}
+  openSheet('Find People & Connect',`<p style="color:var(--msg-muted);margin-top:0">PICNIKO मधील registered users शोधा. Connect केल्यानंतरच direct chat सुरू करता येईल.</p><input class="discover-search" id="discoverSearch" placeholder="Search name or role…" autocomplete="off"><div id="discoverStatus" class="compose-note" style="padding:8px 2px">Loading registered users…</div><div id="discoverUserList" class="discover-list"><div class="discover-empty">Searching PICNIKO users…</div></div>`);
+  $('discoverSearch').addEventListener('input',e=>scheduleDiscoverUsers(e.target.value));
+  $('discoverUserList').addEventListener('click',async e=>{
+    const b=e.target.closest('[data-person-id]'); if(!b)return;
+    await railPersonAction(b.dataset.personId,b.dataset.rel);
+    const rel=relationshipFor(b.dataset.personId);
+    if(rel.status==='friend')closeSheet();
+  });
+  await discoverUsers('');
+}
+
+$('conversationList').addEventListener('click',e=>{if(e.target.closest('#emptyNewChat')){openNewChatSheet();return;}const b=e.target.closest('[data-id]');if(!b)return;selected=b.dataset.id;$('msgList').classList.add('collapsed');renderChat();});$('searchInput').addEventListener('input',renderList);document.querySelectorAll('.msg-tab').forEach(b=>b.onclick=()=>{filter=b.dataset.filter;document.querySelectorAll('.msg-tab').forEach(x=>x.classList.toggle('active',x===b));renderList();});$('newChatBtn').onclick=()=>openNewChatSheet();$('refreshBtn').onclick=()=>loadBackendConversations({preserveSelected:true}).catch(error=>{backendStatus=error?.message||'Refresh failed.';renderList();});$('settingsBtn').onclick=()=>openSheet('Message settings','<button class="sheet-option"><b>🔒 Privacy and security</b><span>Seen status, blocking and reporting</span></button><button class="sheet-option"><b>🔔 Notifications</b><span>Message notification preferences</span></button><button class="sheet-option"><b>☁ Backup and storage</b><span>Cloud backup will be connected later</span></button>');$('sheetClose').onclick=closeSheet;$('sheet').addEventListener('click',e=>{if(e.target===$('sheet'))closeSheet();});$('sheetContent').addEventListener('click',e=>{const emoji=e.target.closest('[data-emoji]');if(emoji&&selected){closeSheet();$('messageInput')?.focus();if($('messageInput'))$('messageInput').value+=emoji.dataset.emoji;} });
+renderList();
+window.addEventListener('pagehide',()=>{cleanupRealtime();});
+loadBackendConversations().catch(error=>{backendStatus=error?.message||'Backend conversation check failed.';renderList();});
+
+
+/* ================= V28 COMPLETE FEATURES ================= */
+const V28_MAX_FILE=50*1024*1024;
+let v28UploadBusy=false, v28LiveTimer=null, v28LiveSession=null;
+function v28FileKind(file){const t=file.type||''; if(t.startsWith('image/'))return 'image'; if(t.startsWith('video/'))return 'video'; if(t.startsWith('audio/'))return 'audio'; return 'file';}
+function v28FormatSize(n){if(!n)return '0 B';const u=['B','KB','MB','GB'];let i=0,x=n;while(x>=1024&&i<u.length-1){x/=1024;i++;}return `${x.toFixed(i?1:0)} ${u[i]}`;}
+async function v28Signed(path){const db=getDb();if(!db||!path)return null;const {data,error}=await db.storage.from('message-media').createSignedUrl(path,3600);return error?null:data?.signedUrl||null;}
+function v28AttachmentMarkup(m){
+  const kind=m.fileType||v28FileKind({type:m.mime_type||''});
+  if(m.signed_url) m.media_url=m.signed_url;
+  if(m.media_url&&m.media_url.startsWith('http')){
+    if(kind==='image')return `<img class="v28-media" src="${escapeHtml(m.media_url)}" alt="${escapeHtml(m.text||'image')}" loading="lazy">`;
+    if(kind==='video')return `<video class="v28-media" src="${escapeHtml(m.media_url)}" controls playsinline></video>`;
+    if(kind==='audio')return `<audio class="v28-audio" src="${escapeHtml(m.media_url)}" controls></audio>`;
+  }
+  if(m.media_url&&m.media_url.startsWith('message-media/')){
+    return `<div class="v28-file"><span style="font-size:25px">${kind==='image'?'🖼️':kind==='video'?'🎬':kind==='audio'?'🎵':'📄'}</span><div><div class="v28-file-name">${escapeHtml(m.text||'Attachment')}</div><div class="v28-file-meta">${escapeHtml(kind.toUpperCase())}</div></div></div>`;
+  }
+  return `<div class="v28-file"><span style="font-size:25px">${kind==='image'?'🖼️':kind==='video'?'🎬':kind==='audio'?'🎵':'📄'}</span><div><div class="v28-file-name">${escapeHtml(m.text||'Attachment')}</div></div></div>`;
+}
+function v28LocationMarkup(m){const live=!!m.live;const active=live&&m.live_active!==false;return `<div class="v28-map-card"><div class="v28-map-grid"></div><div class="v28-map-content"><div class="v28-pin">${live?'🛰️':'📍'}</div><div class="loc-title">${live?'Live location':'Location shared'}</div><div class="loc-sub">${m.latitude?.toFixed?m.latitude.toFixed(5):m.latitude}, ${m.longitude?.toFixed?m.longitude.toFixed(5):m.longitude}</div>${live?`<div class="v28-live-route"></div><div class="v28-status"><span class="v28-live-dot" style="${active?'':'background:#7893b4;box-shadow:none'}"></span>${active?'Live location sharing':'Live location ended'}</div>`:''}<div class="v28-location-actions"><button class="v28-mini-btn" data-open-map="${m.latitude},${m.longitude}">🗺 Open map</button></div></div></div>`;}
+async function v28LoadSignedMedia(){for(const c of conversations){for(const m of (c.messages||[])){if(m.media_url&&m.media_url.startsWith('message-media/')&&!m.signed_url){m.signed_url=await v28Signed(m.media_url);if(m.signed_url)m.media_url=m.signed_url;}}}if(selected)renderChat();}
+async function v28InsertMessage(c,{type='text',text='',mediaPath=null,latitude=null,longitude=null,live=false,mime=null,fileSize=null}={}){
+ const db=getDb(); if(!db||!activeUser||!c?.backend)return null;
+ const {data,error}=await db.from('messages').insert({conversation_id:c.id,sender_user_id:activeUser.id,message_type:type,message_text:text,media_url:mediaPath}).select('id,conversation_id,sender_user_id,message_type,message_text,media_url,created_at').single();
+ if(error)throw error;
+ if(latitude!=null&&longitude!=null){const {error:e}=await db.from('message_locations').insert({message_id:data.id,conversation_id:c.id,sender_user_id:activeUser.id,latitude,longitude,is_live:live});if(e)throw e;}
+ const mapped={id:data.id,mine:true,text:data.message_text||text,time:formatTime(data.created_at)||'Now',seen:false,file:type!=='text',fileType:type==='image'?'image':type==='video'?'video':type==='audio'?'audio':'file',media_url:mediaPath,latitude,longitude,live,mime_type:mime,file_size:fileSize};
+ if(mediaPath&&mediaPath.startsWith('message-media/'))mapped.media_url=await v28Signed(mediaPath)||mediaPath;
+ c.messages.push(mapped);c.preview=text||({image:'📷 Photo',video:'🎬 Video',audio:'🎵 Audio',file:'📎 File',location:'📍 Location',live_location:'🛰 Live location'}[type]||'Message');c.time=mapped.time;return mapped;
+}
+async function v28UploadFiles(files){
+ const c=conversations.find(x=>String(x.id)===String(selected));const db=getDb();if(!c?.backend||!db||!activeUser)return;
+ const arr=[...files];if(!arr.length)return; if(arr.some(f=>f.size>V28_MAX_FILE)){openSheet('File too large','<p style="color:var(--msg-muted)">Each attachment must be 50 MB or smaller.</p>');return;}
+ v28UploadBusy=true;openSheet('Uploading attachments',`<div id="v28UploadBox"><div>Preparing upload…</div><div class="v28-progress"><i id="v28Progress"></i></div></div>`);
+ try{let done=0;for(const file of arr){const kind=v28FileKind(file);const safe=file.name.replace(/[^a-zA-Z0-9._-]+/g,'_');const path=`${c.id}/${activeUser.id}/${crypto.randomUUID()}-${safe}`;const {error}=await db.storage.from('message-media').upload(path,file,{contentType:file.type||'application/octet-stream',upsert:false});if(error)throw error;await v28InsertMessage(c,{type:kind,text:file.name,mediaPath:path,mime:file.type,fileSize:file.size});done++;const p=Math.round(done/arr.length*100);const el=document.getElementById('v28Progress');if(el)el.style.width=p+'%';}closeSheet();renderChat();renderList();
+ }catch(e){openSheet('Upload failed',`<p style="color:var(--msg-muted)">${escapeHtml(e?.message||'Could not upload attachment.')}</p><div class="v28-privacy">Check Supabase Storage bucket <b>message-media</b> and its RLS policies.</div>`);}finally{v28UploadBusy=false;}
+}
+let v28Recorder=null,v28RecorderChunks=[],v28RecorderStream=null;
+async function v28StartVoiceRecording(c){
+ if(!c?.backend){openSheet('Voice message','<p style="color:var(--msg-muted)">Voice messages require a connected Supabase conversation.</p>');return;}
+ if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){openSheet('Voice unavailable','<p style="color:var(--msg-muted)">This browser does not support voice recording.</p>');return;}
+ try{
+  const stream=await navigator.mediaDevices.getUserMedia({audio:true}); v28RecorderStream=stream; v28RecorderChunks=[];
+  const mime=MediaRecorder.isTypeSupported('audio/webm;codecs=opus')?'audio/webm;codecs=opus':'audio/webm';
+  v28Recorder=new MediaRecorder(stream,{mimeType:mime});
+  openSheet('Recording voice',`<div style="text-align:center;padding:12px"><div style="font-size:38px">🎙️</div><p id="v28RecordTimer" style="font-weight:900;font-size:22px;margin:8px 0">00:00</p><button class="sheet-option" id="v28StopRecord"><b>⏹ Stop & Send</b><span>Your voice message will be uploaded securely to this chat.</span></button></div>`);
+  let sec=0; const timer=setInterval(()=>{sec++;const el=$('v28RecordTimer');if(el)el.textContent=`${String(Math.floor(sec/60)).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}`;},1000);
+  v28Recorder.ondataavailable=e=>{if(e.data.size)v28RecorderChunks.push(e.data)};
+  v28Recorder.onstop=async()=>{clearInterval(timer);v28RecorderStream?.getTracks().forEach(t=>t.stop());const blob=new Blob(v28RecorderChunks,{type:mime});v28Recorder=null;v28RecorderChunks=[];closeSheet();await v28UploadBlob(c,blob,`voice-${Date.now()}.webm`,mime);};
+  $('v28StopRecord').onclick=()=>v28Recorder?.stop(); v28Recorder.start();
+ }catch(e){v28RecorderStream?.getTracks().forEach(t=>t.stop());openSheet('Microphone permission',`<p style="color:var(--msg-muted)">${escapeHtml(e?.message||'Microphone permission was not granted.')}</p>`);}
+}
+async function v28UploadBlob(c,blob,name,mime){const db=getDb();if(!db||!activeUser)return;try{openSheet('Uploading voice',`<div>Uploading ${escapeHtml(name)}…</div><div class="v28-progress"><i id="v28Progress" style="width:30%"></i></div>`);const path=`${c.id}/${activeUser.id}/${crypto.randomUUID()}-${name}`;const {error}=await db.storage.from('message-media').upload(path,blob,{contentType:mime,upsert:false});if(error)throw error;await v28InsertMessage(c,{type:'audio',text:name,mediaPath:path,mime,fileSize:blob.size});closeSheet();renderChat();renderList();}catch(e){openSheet('Voice upload failed',`<p style="color:var(--msg-muted)">${escapeHtml(e?.message||'Could not upload voice message.')}</p>`);}}
+
+async function v28CreatePlan(c){
+  if(!c?.backend){openSheet('Plan requires a connected chat','<p style="color:var(--msg-muted)">Connect to a PICNIKO friend first, then create a shared plan.</p>');return;}
+  openSheet('🗺️ Plan together',`<div class="v28-plan-form"><div class="v28-ai-chip">✨ PICNIKO shared plan</div><div class="v28-plan-field"><label>Destination</label><input id="v28PlanPlace" placeholder="e.g. Mulshi, Lonavala…"></div><div class="v28-plan-grid"><div class="v28-plan-field"><label>Date</label><input id="v28PlanDate" type="date"></div><div class="v28-plan-field"><label>People</label><input id="v28PlanPeople" type="number" min="1" value="2"></div></div><div class="v28-plan-grid"><div class="v28-plan-field"><label>Budget / person</label><input id="v28PlanBudget" type="number" min="0" placeholder="₹ 1500"></div><div class="v28-plan-field"><label>Travel</label><select id="v28PlanTravel"><option>Car</option><option>Bike</option><option>Public transport</option><option>Not decided</option></select></div></div><button class="v28-plan-submit" id="v28PlanSend">✨ Create shared trip plan</button></div>`);
+  $('v28PlanSend').onclick=async()=>{const place=$('v28PlanPlace').value.trim();if(!place){$('v28PlanPlace').focus();return;}const date=$('v28PlanDate').value||'Flexible date';const people=$('v28PlanPeople').value||'2';const budget=$('v28PlanBudget').value?`₹${$('v28PlanBudget').value}/person`:'Budget to decide';const travel=$('v28PlanTravel').value;const text=`🗺️ PICNIKO PLAN\n${place}\n📅 ${date}\n👥 ${people} people\n💰 ${budget}\n🚗 ${travel}\n\nVote, add places and share your live location in this chat.`;closeSheet();const input=$('messageInput');input.value=text;await sendMessage();};
+}
+function v28OpenSmart(){openSheet('🤖 PIKO inside your chat',`<p style="color:var(--msg-muted);margin-top:0">Use PIKO to turn a conversation into an action.</p><div class="v28-feature-grid"><button class="v28-feature" id="v28SmartPlan"><b>🗺️ Plan a trip</b><span>Build a destination, date, budget and travel plan.</span></button><button class="v28-feature" id="v28SmartNearby"><b>📍 Find nearby</b><span>Explore food, stays, picnic points and offers around a location.</span></button><button class="v28-feature" id="v28SmartPoll"><b>🗳️ Create a poll</b><span>Ask the group and decide together.</span></button><button class="v28-feature" id="v28SmartExpense"><b>💰 Split expense</b><span>Track trip costs and share the amount.</span></button></div>`);$('v28SmartPlan').onclick=()=>{closeSheet();v28CreatePlan(conversations.find(x=>String(x.id)===String(selected)));};$('v28SmartNearby').onclick=()=>openSheet('📍 Nearby discovery','<p style="color:var(--msg-muted)">Choose a shared location first. Nearby discovery will use that location to surface PICNIKO places, food, stays and offers.</p><button class="sheet-option" id="v28NearbyLocation"><b>📍 Share a location</b><span>Open the location picker in this chat</span></button>');$('v28NearbyLocation').onclick=()=>{closeSheet();v28ShareCurrentLocation();};$('v28SmartPoll').onclick=()=>openSheet('🗳️ Quick poll','<div class="v28-plan-form"><div class="v28-plan-field"><label>Question</label><input id="v28PollQ" placeholder="Where should we go Sunday?"></div><div class="v28-plan-field"><label>Options</label><input id="v28PollA" placeholder="Mulshi, Lonavala, Mahabaleshwar"></div><button class="v28-plan-submit" id="v28PollSend">Create poll in chat</button></div>');$('v28PollSend').onclick=async()=>{const q=$('v28PollQ').value.trim();const a=$('v28PollA').value.trim();if(!q||!a)return;closeSheet();$('messageInput').value=`🗳️ POLL\n${q}\n${a.split(',').map((x,i)=>`${String.fromCharCode(65+i)}. ${x.trim()}`).join('\n')}`;await sendMessage();};$('v28SmartExpense').onclick=()=>openSheet('💰 Trip expense','<div class="v28-plan-form"><div class="v28-plan-field"><label>Expense</label><input id="v28ExpName" placeholder="Fuel / Food / Tickets"></div><div class="v28-plan-field"><label>Amount</label><input id="v28ExpAmt" type="number" placeholder="2400"></div><button class="v28-plan-submit" id="v28ExpSend">Share expense</button></div>');$('v28ExpSend').onclick=async()=>{const n=$('v28ExpName').value.trim();const a=$('v28ExpAmt').value.trim();if(!n||!a)return;closeSheet();$('messageInput').value=`💰 EXPENSE\n${n}: ₹${a}\nSplit this expense with the group.`;await sendMessage();};}
+function v28AttachmentMenu(){openSheet('Share something',`<button class="sheet-option" id="v28ChooseFile"><b>📎 File / PDF / Document</b><span>Up to 50 MB</span></button><button class="sheet-option" id="v28ChooseImage"><b>🖼 Photos</b><span>Images from your device</span></button><button class="sheet-option" id="v28ChooseVideo"><b>🎬 Video</b><span>Video attachment up to 50 MB</span></button><button class="sheet-option" id="v28ChooseAudio"><b>🎵 Audio</b><span>Audio file attachment</span></button>`);$('v28ChooseFile').onclick=()=>{$('v28FileInput').click();closeSheet()};$('v28ChooseImage').onclick=()=>{$('v28ImageInput').click();closeSheet()};$('v28ChooseVideo').onclick=()=>{$('v28VideoInput').click();closeSheet()};$('v28ChooseAudio').onclick=()=>{$('v28AudioInput').click();closeSheet()};}
+async function v28ShareCurrentLocation(){const c=conversations.find(x=>String(x.id)===String(selected));if(!c?.backend)return;openSheet('Share location','<p style="color:var(--msg-muted)">PICNIKO will first show your location preview. It will be sent only after you press <b>Send location</b>.</p><button class="sheet-option" id="v28GetLocation"><b>📍 Select my current location</b><span>One-time location • review before sending</span></button>');$('v28GetLocation').onclick=()=>navigator.geolocation.getCurrentPosition(pos=>{const lat=Number(pos.coords.latitude),lon=Number(pos.coords.longitude);openSheet('Confirm location',`<div class="v28-map-card" style="margin-top:8px"><div class="v28-map-grid"></div><div class="v28-map-content"><div class="v28-pin">📍</div><div class="loc-title">Your selected location</div><div class="loc-sub">${lat.toFixed(5)}, ${lon.toFixed(5)}</div><div class="v28-location-actions"><button class="v28-mini-btn" id="v28PreviewMap">🗺 Preview map</button></div></div></div><p class="v28-privacy">🔒 Shared only with this chat.</p><button class="sheet-option" id="v28ConfirmLocation"><b>📤 Send location</b><span>Send this selected location to the conversation</span></button>`);$('v28PreviewMap').onclick=()=>window.open(`https://www.google.com/maps?q=${encodeURIComponent(lat)},${encodeURIComponent(lon)}`,'_blank','noopener,noreferrer');$('v28ConfirmLocation').onclick=async()=>{try{await v28InsertMessage(c,{type:'location',text:'Current location',latitude:lat,longitude:lon});closeSheet();renderChat();renderList();}catch(e){openSheet('Location failed',`<p style="color:var(--msg-muted)">${escapeHtml(e.message||'Could not send location.')}</p>`);}}},err=>openSheet('Location permission',`<p style="color:var(--msg-muted)">${escapeHtml(err.message||'Location permission was not granted.')}</p>`),{enableHighAccuracy:true,timeout:12000,maximumAge:10000});}
+async function v28StartLiveLocation(){const c=conversations.find(x=>String(x.id)===String(selected));if(!c?.backend)return;if(v28LiveSession){openSheet('Live location active',`<p style="color:var(--msg-muted)">Your live location is currently being shared in this chat.</p><button class="sheet-option" id="v28StopLiveBtn"><b>⏹ Stop live location</b><span>Stop sharing immediately.</span></button>`);$('v28StopLiveBtn').onclick=()=>{v28StopLive();closeSheet();};return;}openSheet('Live location','<p style="color:var(--msg-muted)">Choose how long you want to share your live location.</p><button class="sheet-option" data-live-min="15"><b>🛰 15 minutes</b><span>Short trip</span></button><button class="sheet-option" data-live-min="60"><b>🛰 1 hour</b><span>Travel / meetup</span></button><button class="sheet-option" data-live-min="480"><b>🛰 8 hours</b><span>Long journey</span></button>');document.querySelectorAll('[data-live-min]').forEach(b=>b.onclick=()=>v28BeginLive(c,Number(b.dataset.liveMin)))}
+async function v28BeginLive(c,minutes){closeSheet();if(!navigator.geolocation){openSheet('Live location unavailable','<p style="color:var(--msg-muted)">This browser does not support location.</p>');return;}try{const pos=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{enableHighAccuracy:true,timeout:15000}));const db=getDb();const expires=new Date(Date.now()+minutes*60000).toISOString();const mapped=await v28InsertMessage(c,{type:'live_location',text:`Live location • ${minutes} min`,latitude:pos.coords.latitude,longitude:pos.coords.longitude,live:true});if(!mapped?.id)throw new Error('Live location message could not be created.');const {data,error}=await db.from('live_locations').insert({message_id:mapped.id,conversation_id:c.id,user_id:activeUser.id,latitude:pos.coords.latitude,longitude:pos.coords.longitude,expires_at:expires,is_active:true}).select('id').single();if(error)throw error;v28LiveSession={id:data.id,messageId:mapped.id,expiresAt:Date.now()+minutes*60000};mapped.live_active=true;renderChat();clearInterval(v28LiveTimer);v28LiveTimer=setInterval(async()=>{if(!v28LiveSession||Date.now()>v28LiveSession.expiresAt){if(v28LiveSession?.id){await db.from('live_locations').update({is_active:false,updated_at:new Date().toISOString()}).eq('id',v28LiveSession.id).eq('user_id',activeUser.id);}clearInterval(v28LiveTimer);v28LiveTimer=null;if(v28LiveSession){v28LiveSession=null;renderChat();}return;}navigator.geolocation.getCurrentPosition(async p=>{await db.from('live_locations').update({latitude:p.coords.latitude,longitude:p.coords.longitude,updated_at:new Date().toISOString()}).eq('id',v28LiveSession.id).eq('user_id',activeUser.id);const m=c.messages.find(x=>String(x.id)===String(v28LiveSession.messageId));if(m){m.latitude=p.coords.latitude;m.longitude=p.coords.longitude;m.updated_at=new Date().toISOString();m.live_active=true;}renderChat();},()=>{}, {enableHighAccuracy:true,timeout:10000,maximumAge:5000});},10000);}catch(e){openSheet('Live location failed',`<p style="color:var(--msg-muted)">${escapeHtml(e?.message||'Could not start live location.')}</p>`);}}
+function v28StopLive(){if(v28LiveSession){const session=v28LiveSession;const db=getDb();db?.from('live_locations').update({is_active:false,updated_at:new Date().toISOString()}).eq('id',session.id).eq('user_id',activeUser?.id);const c=conversations.find(x=>String(x.id)===String(selected));const m=c?.messages?.find(x=>String(x.id)===String(session.messageId));if(m)m.live_active=false;v28LiveSession=null;}clearInterval(v28LiveTimer);v28LiveTimer=null;renderChat();}
+function v28EnhanceRender(){
+ const oldRenderChat=renderChat;
+ window.__v28RenderChat=oldRenderChat;
+}
+// Patch message renderer with media/location/seen UI.
+const __origMessageHTML=messageHTML;
+messageHTML=function(m){let extra='';const isLocation=m.fileType==='location'||m.fileType==='live_location'||m.latitude!=null||m.location;if(isLocation)extra=v28LocationMarkup(m);else if(m.file)extra=v28AttachmentMarkup(m);return `<div class="bubble-row ${m.mine?'mine':''}">${!m.mine?'<span class="avatar2" style="width:30px;height:30px;flex-basis:30px;font-size:12px">'+(conversations.find(x=>String(x.id)===String(selected))?.initial||'P')+'</span>':''}<div class="bubble">${extra}${m.text&&!isLocation&&!m.file?escapeHtml(m.text):''}${isLocation?'<div class="bubble-meta"><span>Location</span></div>':''}<div class="bubble-meta"><span>${escapeHtml(m.time||'')}</span>${m.mine?(m.seen?'<span class="seen">✓✓ Seen</span>':'<span class="v28-status">✓ Delivered</span>'):''}</div></div></div>`;};
+// Hook existing composer bindings after renderChat creates DOM.
+const __origBindChat=bindChat;
+bindChat=function(c){__origBindChat(c);$('attachBtn')?.addEventListener('click',v28AttachmentMenu);$('planBtn')?.addEventListener('click',()=>v28CreatePlan(c));$('smartBtn')?.addEventListener('click',v28OpenSmart);$('locationBtn')?.addEventListener('click',v28ShareCurrentLocation);$('liveLocationBtn')?.addEventListener('click',v28StartLiveLocation);['v28FileInput','v28ImageInput','v28VideoInput','v28AudioInput'].forEach(id=>$(id)?.addEventListener('change',e=>{v28UploadFiles(e.target.files);e.target.value='';}));};
+// Mark chat read and load receipt/location metadata.
+async function v28MarkRead(conversationId){const db=getDb();if(!db||!activeUser||!conversationId)return;try{await db.rpc('mark_conversation_read',{p_conversation_id:conversationId});const c=conversations.find(x=>String(x.id)===String(conversationId));if(c)c.unread=0;}catch(_e){}}
+const __oldRenderChat=renderChat;
+renderChat=function(){__oldRenderChat();if(selected){v28MarkRead(selected);v28LoadMessageExtras(selected).catch(()=>{});}};
+async function v28LoadMessageExtras(conversationId){const db=getDb();if(!db)return;const c=conversations.find(x=>String(x.id)===String(conversationId));if(!c)return;const ids=(c.messages||[]).map(m=>m.id).filter(Boolean);if(!ids.length){await v28LoadSignedMedia();return;}const {data:locs}=await db.from('message_locations').select('message_id,latitude,longitude,is_live').in('message_id',ids);const map=new Map((locs||[]).map(x=>[String(x.message_id),x]));const {data:lives}=await db.from('live_locations').select('message_id,latitude,longitude,is_active,expires_at,updated_at').eq('conversation_id',conversationId).order('updated_at',{ascending:false});const liveMap=new Map((lives||[]).filter(x=>x.message_id).map(x=>[String(x.message_id),x]));for(const m of c.messages){const l=map.get(String(m.id));if(l){m.latitude=Number(l.latitude);m.longitude=Number(l.longitude);m.live=!!l.is_live;m.fileType=l.is_live?'live_location':'location';m.live_active=!!l.is_live;}const lv=liveMap.get(String(m.id));if(lv){m.latitude=Number(lv.latitude);m.longitude=Number(lv.longitude);m.live=true;m.fileType='live_location';m.live_active=!!lv.is_active&&new Date(lv.expires_at).getTime()>Date.now();m.updated_at=lv.updated_at;}}await v28LoadSignedMedia();}
+// Open map action.
+document.addEventListener('click',e=>{const b=e.target.closest('[data-open-map]');if(b){const [lat,lon]=b.dataset.openMap.split(',');window.open(`https://www.google.com/maps?q=${encodeURIComponent(lat)},${encodeURIComponent(lon)}`,'_blank','noopener,noreferrer');}});
+
+</script>
+<script type="module">
+  import { mountBottom } from "../../js/app.js";
+  mountBottom("home");
+  const nav = document.querySelector("body.messages-page .bottom");
+  if (nav && !nav.querySelector(".messages-nav-toggle")) {
+    nav.classList.add("messages-nav-minimized");
+    const toggle = document.createElement("button");
+    toggle.className = "messages-nav-toggle";
+    toggle.type = "button";
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.setAttribute("aria-label", "Show or hide bottom navigation");
+    toggle.textContent = "⌃ Menu";
+    toggle.addEventListener("click", () => {
+      const minimized = nav.classList.toggle("messages-nav-minimized");
+      toggle.setAttribute("aria-expanded", String(!minimized));
+      toggle.textContent = minimized ? "⌃ Menu" : "⌄ Hide";
+    });
+    nav.appendChild(toggle);
+  }
+
+</script>
+</body></html>
